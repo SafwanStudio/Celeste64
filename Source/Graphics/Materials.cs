@@ -57,6 +57,7 @@ public class DefaultMaterial : Material
 	{
 		var copy = new DefaultMaterial(Texture);
 		CopyTo(copy);
+		copy.Name = Name;
         return copy;
 	}
 }

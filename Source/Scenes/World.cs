@@ -135,7 +135,13 @@ public class World : Scene
 			{
 				SetPaused(false);
 				Audio.StopBus(Sfx.bus_dialog, false);
-				Get<Player>()?.Kill();
+				if (TwoPlayer)
+				{
+					foreach (var pl in All<Player>())
+						(pl as Player)?.Kill();
+				}
+				else
+					Get<Player>()?.Kill();
 			}));
 			pauseMenu.Add(new Menu.Submenu(() => Loc.Str("PauseOptions"), pauseMenu, optionsMenu));
 			pauseMenu.Add(new Menu.Option(() => Loc.Str("PauseSaveQuit"), () => Game.Instance.Goto(new Transition()
@@ -416,11 +422,18 @@ public class World : Scene
 			}
 
 			// ONLY update the player when dead
-			var deadPlayer = Get<Player>(p => p.Dead);
-			if (deadPlayer != null)
+			// when someone dies the world freezes while they fade out (in two player mode only when everybody is dead,
+			// otherwise the survivor keeps playing and the dead player comes back next to them)
+			if (Get<Player>(p => p.Dead) != null && (!TwoPlayer || Get<Player>(p => !p.Dead) == null))
 			{
-				deadPlayer.Update();
-				deadPlayer.LateUpdate();
+				foreach (var pl in All<Player>())
+				{
+					if (pl is Player deadPlayer && deadPlayer.Dead)
+					{
+						deadPlayer.Update();
+						deadPlayer.LateUpdate();
+					}
+				}
 				ResolveChanges();
 				return;
 			}

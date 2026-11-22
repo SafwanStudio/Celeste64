@@ -15,6 +15,9 @@ public class SkinnedModel : Model
     public int AnimationIndex;
 	public float Rate = 1.0f;
 
+	/// <summary>Meshes using these material indices are not drawn</summary>
+	public readonly HashSet<int> HiddenMaterials = [];
+
 	private struct Playing
 	{
 		public int Index;
@@ -231,6 +234,8 @@ public class SkinnedModel : Model
 			{
 				foreach (var primitive in meshPart)
 				{
+					if (HiddenMaterials.Contains(primitive.Material))
+						continue;
 					var mat = Materials[primitive.Material];
 
 					state.ApplyToMaterial(mat, statXform.WorldMatrix * BaseTranslation);
@@ -254,6 +259,8 @@ public class SkinnedModel : Model
 			{
 				foreach (var primitive in meshPart)
 				{
+					if (HiddenMaterials.Contains(primitive.Material))
+						continue;
 					var mat = Materials[primitive.Material];
 					state.ApplyToMaterial(mat, BaseTranslation);
 					var uniforms = mat.VertexUniforms with { JointsMult = 1.0f };

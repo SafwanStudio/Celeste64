@@ -216,6 +216,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 			Model.SetLooping("Dash", false);
 			Model.Flags |= ModelFlags.Silhouette;
 			Model.Play("Idle");
+			Model.MakeMaterialsUnique();
 
 			foreach (var mat in Model.Materials)
 				mat.Effects = 0.60f;
@@ -254,8 +255,42 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 			AddedCore();
 	}
 
+	private void SetupAltModel()
+	{
+		if (!Assets.Models.TryGetValue("player2", out var template))
+			return;
+
+		Model = new(template);
+		Model.SetBlendDuration("Idle", "Dash", 0.05f);
+		Model.SetBlendDuration("Idle", "Run", 0.2f);
+		Model.SetBlendDuration("Run", "Skid", .125f);
+		Model.SetLooping("Dash", false);
+		Model.Flags |= ModelFlags.Silhouette;
+		Model.Play("Idle");
+		Model.MakeMaterialsUnique();
+
+		for (int i = 0; i < Model.Materials.Count; i++)
+		{
+			Model.Materials[i].Effects = 0.60f;
+
+			// face decals and bangs use the "Hair" material: this character has none
+			if (Model.Materials[i].Name == "Hair")
+				Model.HiddenMaterials.Add(i);
+		}
+
+		normalTexture = Model.Materials.Count > 0 ? Model.Materials[0].Texture : null;
+		SetHairColor(AltColor);
+	}
+
 	private void AddedCore()
 	{
+		if (IsAltCharacter)
+		{
+			SetupAltModel();
+			airJumps = AltMaxAirJumps;
+		}
+		lastSafePos = Position;
+
 		if (World.Entry.Reason == World.EntryReasons.Respawned)
 		{
 			cameraTargetForward = storedCameraForward;
@@ -448,6 +483,10 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 			if (onGround)
 			{
 				autoJump = false;
+				if (IsAltCharacter)
+					airJumps = AltMaxAirJumps;
+				if (!Dead && stateMachine.State != States.Respawn)
+					lastSafePos = Position;
 				groundNormal = normal;
 				tCoyote = CoyoteTime;
 				coyoteZ = Position.Z;
@@ -663,12 +702,9 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	public void SetHairColor(Color color)
 	{
-		// player two has (nearly) black hair, still tinted so dash state stays readable
+		// player two has its own character: just a fixed glow color
 		if (PlayerIndex == 1)
-		{
-			var v = color.ToVector4();
-			color = new Color(v.X * .16f, v.Y * .16f, v.Z * .22f, 1.0f);
-		}
+			color = AltColor;
 
 		foreach (var mat in Model.Materials)
 		{
@@ -766,6 +802,102 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	public void CancelGroundSnap() =>
 		tGroundSnapCooldown = 0.1f;
+
+	private void DoubleJump()
+	{
+		airJumps--;
+		StopGlide();
+		jumpCuttable = true;
+		holdJumpSpeed = velocity.Z = JumpSpeed * 0.92f;
+		tHoldJump = JumpHoldTime;
+		autoJump = false;
+
+		var input = RelativeMoveInput;
+		if (input != Vec2.Zero)
+		{
+			input = input.Normalized();
+			targetFacing = input;
+			velocity += new Vec3(input * JumpXYBoost, 0);
+		}
+
+		ModelScale = new(.6f, .6f, 1.4f);
+		Audio.Play(Sfx.sfx_jump, Position);
+
+		// sparkle ring + soft glow
+		for (int i = 0; i < 12; i++)
+		{
+			var dir = Calc.AngleToVector(i / 12.0f * MathF.Tau);
+			World.Request<Dust>().Init(Position + new Vec3(dir * 3, 2), new Vec3(dir * 45, 8), new Color(0.6f, 0.92f, 1.0f, 1.0f), "particle-star", 4.5f, 0.45f, 0);
+		}
+		World.Request<Dust>().Init(Position + new Vec3(0, 0, 4), Vec3.Zero, new Color(0.35f, 0.75f, 1.0f, 1.0f) * 0.5f, "circle", 20, 0.3f, 0);
+	}
+
+	private void SetBodyFlash(bool on)
+	{
+		if (bodyFlashing == on || normalTexture == null)
+			return;
+		bodyFlashing = on;
+
+		var texture = normalTexture;
+		if (on && Assets.Textures.TryGetValue("player2_flash", out var flashTexture))
+			texture = flashTexture;
+
+		foreach (var mat in Model.Materials)
+		{
+			mat.Texture = texture;
+			mat.Effects = on ? 0 : 0.60f;
+		}
+	}
+
+	private void StopGlide()
+	{
+		if (!gliding)
+			return;
+		gliding = false;
+		SetBodyFlash(false);
+	}
+
+	private void UpdateGlide()
+	{
+		bool want = IsAltCharacter && !onGround && Controls.Dash.Down && velocity.Z <= 0;
+		if (!want)
+		{
+			StopGlide();
+			return;
+		}
+
+		if (!gliding)
+		{
+			gliding = true;
+			tGlideFlash = 0;
+			tGlideFx = 0;
+			Model.Clear();
+			Model.Play("Dash", true);
+			Audio.Play(Sfx.sfx_dash_pink, Position);
+		}
+
+		// normal dash pose
+		Model.Play("Dash");
+		Model.Rate = 1;
+
+		// fall slowly
+		if (velocity.Z < -GlideFallSpeed)
+			velocity.Z = Calc.Approach(velocity.Z, -GlideFallSpeed, GlideBrake * Time.Delta);
+
+		// the body flashes blue
+		tGlideFlash += Time.Delta;
+		SetBodyFlash(((int)(tGlideFlash / 0.07f)) % 2 == 0);
+
+		// particles and light trail
+		tGlideFx -= Time.Delta;
+		if (tGlideFx <= 0)
+		{
+			tGlideFx = 0.04f;
+			var at = Position + new Vec3(World.Rng.Float(-4, 4), World.Rng.Float(-4, 4), World.Rng.Float(2, 12));
+			World.Request<Dust>().Init(at, new Vec3(World.Rng.Float(-8, 8), World.Rng.Float(-8, 8), 14), new Color(0.6f, 0.92f, 1.0f, 1.0f), "particle-star", 3.5f, 0.5f, 0);
+			World.Request<Dust>().Init(Position + new Vec3(0, 0, 8), Vec3.Zero, new Color(0.3f, 0.7f, 1.0f, 1.0f) * 0.35f, "circle", 14, 0.25f, 0);
+		}
+	}
 
 	private void Jump()
 	{
@@ -884,6 +1016,9 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	public void Kill()
 	{
+		if (Dead)
+			return;
+
 		stateMachine.State = States.Dead;
 		storedCameraForward = cameraTargetForward;
 		storedCameraDistance = cameraTargetDistance;
@@ -999,6 +1134,21 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	private bool autoJump;
 	private bool jumpCuttable;
 	private float tNoMove;
+
+	// ---- second character (player two): double jump + glide ----
+	private const int AltMaxAirJumps = 1;
+	private const float GlideFallSpeed = 14;
+	private const float GlideBrake = 700;
+	private static readonly Color AltColor = 0x5ab4ff;
+	private bool IsAltCharacter => PlayerIndex == 1 && World.TwoPlayer;
+	private int airJumps;
+	private bool gliding;
+	private float tGlideFx;
+	private float tGlideFlash;
+	private bool bodyFlashing;
+	private Texture? normalTexture;
+	private Vec3 lastSafePos;
+	private float tDeadWait;
 	private float tFootstep;
 
 	private void StNormalEnter()
@@ -1009,6 +1159,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void StNormalExit()
 	{
+		StopGlide();
 		jumpCuttable = false;
 		tHoldJump = 0;
 		tNoMove = 0;
@@ -1220,6 +1371,8 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 			Jump();
 		else if (WallJumpCheck())
 			WallJump();
+		else if (IsAltCharacter && airJumps > 0 && !onGround && tCoyote <= 0 && Controls.Jump.ConsumePress())
+			DoubleJump();
 		else
 		{
 			// variable jump height: letting go of the button early cuts the jump short
@@ -1258,6 +1411,9 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 			}
 		}
 
+		// player two: hold dash in the air to glide
+		UpdateGlide();
+
 		// Update Model Animations
 		if (onGround)
 		{
@@ -1281,7 +1437,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 				Model.Rate = 1;
 			}
 		}
-		else
+		else if (!gliding)
 		{
 			// basically resets everything to the first frame of Run over and over
 			Model.Clear();
@@ -1305,6 +1461,10 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private bool TryDash()
 	{
+		// player two cannot dash (the dash button glides in the air instead)
+		if (IsAltCharacter)
+			return false;
+
 		if (dashes > 0 && tDashCooldown <= 0 && Controls.Dash.ConsumePress())
 		{
 			dashes--;
@@ -1404,6 +1564,14 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	public bool RefillDash(int amount = 1)
 	{
+		if (IsAltCharacter)
+		{
+			if (airJumps >= AltMaxAirJumps)
+				return false;
+			airJumps = AltMaxAirJumps;
+			return true;
+		}
+
 		if (dashes < amount)
 		{
 			dashes = amount;
@@ -1506,6 +1674,8 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void StClimbingEnter()
 	{
+		if (IsAltCharacter)
+			airJumps = AltMaxAirJumps;
 		Model.Play("Climb.Idle", true);
 		Model.Rate = 1.8f;
 		velocity = Vec3.Zero;
@@ -2043,6 +2213,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void StDeadEnter()
 	{
+		tDeadWait = 0;
 		drawModel = drawHair = false;
 		drawOrbs = true;
 		drawOrbsEase = 0;
@@ -2050,10 +2221,41 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 		Audio.Play(Sfx.sfx_death, Position);
 	}
 
+	private void RespawnNearPartner(Player partner)
+	{
+		Dead = false;
+		Position = partner.lastSafePos + new Vec3(PlayerIndex == 1 ? 12 : -12, 0, 0);
+		velocity = Vec3.Zero;
+		dashes = 1;
+		airJumps = IsAltCharacter ? AltMaxAirJumps : 0;
+		lastSafePos = Position;
+
+		// snap our camera to the new position
+		cameraOriginPos = Position;
+		GetCameraTarget(out var orig, out var target, out _);
+		World.Camera.LookAt = target;
+		World.Camera.Position = orig;
+
+		stateMachine.State = States.Respawn;
+	}
+
 	private void StDeadUpdate()
 	{
 		if (drawOrbsEase < 1.0f)
 			drawOrbsEase += Time.Delta * 2.0f;
+
+		// two player mode: if the other player is still alive, only this player comes back
+		if (World.TwoPlayer)
+		{
+			var partner = World.Get<Player>(p => p != this);
+			if (partner != null && !partner.Dead)
+			{
+				tDeadWait += Time.Delta;
+				if (tDeadWait > 1.2f)
+					RespawnNearPartner(partner);
+				return;
+			}
+		}
 
 		if (!Game.Instance.IsMidTransition && drawOrbsEase > 0.30f)
 		{
@@ -2285,7 +2487,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	{
 		if ((World.Camera.Position - (Position + Vec3.UnitZ * 8)).LengthSquared() > World.Camera.NearPlane * World.Camera.NearPlane)
 		{
-			if (drawHair)
+			if (drawHair && !(PlayerIndex == 1 && World.TwoPlayer))
 				populate.Add((this, Hair));
 
 			if (drawModel)
