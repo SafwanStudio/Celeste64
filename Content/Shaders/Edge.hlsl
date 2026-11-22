@@ -63,9 +63,39 @@ float4 fragment_main(VsOutput input) : SV_Target0
 	// more edge the closer to the screen
 	float edge = step(0.001, other - it);
 
-	// calculate edge color mixed with default color
+	// base color
 	float4 col = Texture.Sample(TextureSampler, input.TexCoord);
-	float3 res = lerp(col.rgb, EdgeColor.rgb, edge * 0.70);
-	return float4(res, col.a);
+	float3 base = col.rgb;
+
+	// soft bloom: average neighbors, keep only the bright part
+	float3 blur =
+		Texture.Sample(TextureSampler, input.TexCoord + float2( Pixel.x, 0)).rgb +
+		Texture.Sample(TextureSampler, input.TexCoord + float2(-Pixel.x, 0)).rgb +
+		Texture.Sample(TextureSampler, input.TexCoord + float2(0,  Pixel.y)).rgb +
+		Texture.Sample(TextureSampler, input.TexCoord + float2(0, -Pixel.y)).rgb +
+		Texture.Sample(TextureSampler, input.TexCoord + float2( Pixel.x,  Pixel.y)).rgb +
+		Texture.Sample(TextureSampler, input.TexCoord + float2(-Pixel.x,  Pixel.y)).rgb +
+		Texture.Sample(TextureSampler, input.TexCoord + float2( Pixel.x, -Pixel.y)).rgb +
+		Texture.Sample(TextureSampler, input.TexCoord + float2(-Pixel.x, -Pixel.y)).rgb;
+	blur *= 0.125;
+	float3 glow = max(blur - float3(0.62, 0.62, 0.62), float3(0, 0, 0));
+	base += glow * float3(1.0, 0.92, 0.80) * 0.55;
+
+	// edge color: mix the outline color with a darkened version of the surface
+	float3 edgeCol = lerp(EdgeColor.rgb, base * 0.35, 0.35);
+	float3 res = lerp(base, edgeCol, edge * 0.70);
+
+	// color grade: warm highlights, cool shadows, a little saturation
+	float luma = dot(res, float3(0.299, 0.587, 0.114));
+	res = lerp(float3(luma, luma, luma), res, 1.12);
+	res += float3(0.020, 0.008, -0.018) * smoothstep(0.5, 1.0, luma);
+	res += float3(-0.012, 0.000, 0.022) * (1.0 - smoothstep(0.0, 0.45, luma));
+
+	// vignette
+	float2 q = input.TexCoord - float2(0.5, 0.5);
+	float vig = 1.0 - smoothstep(0.35, 0.85, length(q * float2(1.0, 1.15)));
+	res *= lerp(0.80, 1.0, vig);
+
+	return float4(saturate(res), col.a);
 }
         

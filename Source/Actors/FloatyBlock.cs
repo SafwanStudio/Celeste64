@@ -10,6 +10,7 @@ public sealed class FloatyBlock : Solid
 	private float frequency = 1.2f;
 	private float halflife = 3.0f;
 	private bool hasPlayerRider;
+	private Player? rider;
 
 	public override void Added()
 	{
@@ -25,12 +26,15 @@ public sealed class FloatyBlock : Solid
 		if (!hasPlayerRider && HasPlayerRider())
 		{
 			hasPlayerRider = true;
-			Velocity += World.Get<Player>()!.PreviousVelocity * .8f;
+			rider = World.Get<Player>(p => p.RidingPlatformCheck(this)) ?? World.Get<Player>();
+			if (rider != null)
+				Velocity += rider.PreviousVelocity * .8f;
 		}
 		else if (hasPlayerRider && !HasPlayerRider())
 		{
-			if (World.Get<Player>() is Player player)
-				Velocity -= player.Velocity * .8f;
+			if (rider != null)
+				Velocity -= rider.Velocity * .8f;
+			rider = null;
 			hasPlayerRider = false;
 		}
 

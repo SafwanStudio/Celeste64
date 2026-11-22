@@ -64,8 +64,8 @@ public class Badeline : NPC
 
 	private CoEnumerator Conversation(Cutscene cs)
 	{
-		yield return Co.Run(cs.MoveToDistance(World.Get<Player>(), Position.XY(), 16));
-		yield return Co.Run(cs.FaceEachOther(World.Get<Player>(), this));
+		yield return Co.Run(cs.MoveToDistance((World.TalkingPlayer ?? World.Get<Player>()), Position.XY(), 16));
+		yield return Co.Run(cs.FaceEachOther((World.TalkingPlayer ?? World.Get<Player>()), this));
 
 		int index = Save.CurrentRecord.GetFlag(TALK_FLAG) + 1;
 		yield return Co.Run(cs.Say(Loc.Lines($"Baddy{index}")));

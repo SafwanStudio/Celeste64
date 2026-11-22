@@ -9,6 +9,12 @@ public class World : Scene
 	public readonly record struct EntryInfo(string Map, string CheckPoint, bool Submap, EntryReasons Reason);
 
 	public Camera Camera = new();
+	
+	/// <summary>Two player (split screen) mode</summary>
+	public readonly bool TwoPlayer;
+	public Camera Camera2 = new();
+	public Player? TalkingPlayer;
+	private Target[]? splitTargets;
 	public Rng Rng = new(0);
 	public float HitStun = 0;
 	public bool Paused = false;
@@ -75,6 +81,15 @@ public class World : Scene
 		Camera.FarPlane = 800;
 		Camera.FOVMultiplier = 1;
 
+		TwoPlayer = Save.Instance.TwoPlayers;
+		if (TwoPlayer)
+		{
+			Camera2.Target = Game.Window;
+			Camera2.NearPlane = 20;
+			Camera2.FarPlane = 800;
+			Camera2.FOVMultiplier = 1;
+		}
+
 		strawbCounterWas = Save.CurrentRecord.Strawberries.Count;
 		strawbCounterWiggle = 0;
 
@@ -93,6 +108,7 @@ public class World : Scene
 				languages.Select(language => language.Label).ToList(),
 				CurrentLanguageIndex,
 				index => Save.Instance.SetLanguage(GraphicsDevice, languages[index].ID)));
+			optionsMenu.Add(new Menu.Toggle(TwoPlayerLabel, ToggleTwoPlayers, () => Save.Instance.TwoPlayers));
 			optionsMenu.Add(new Menu.Toggle(() => Loc.Str("OptionsFullscreen"), () => Save.Instance.ToggleFullscreen(Game), () => Save.Instance.Fullscreen));
 			optionsMenu.Add(new Menu.Toggle(() => Loc.Str("OptionsZGuide"), Save.Instance.ToggleZGuide, () => Save.Instance.ZGuide));
 			optionsMenu.Add(new Menu.Toggle(() => Loc.Str("OptionsTimer"), Save.Instance.ToggleTimer, () => Save.Instance.SpeedrunTimer));
@@ -163,6 +179,48 @@ public class World : Scene
 		Log.Info($"Loaded Map '{Entry.Map}' in {stopwatch.ElapsedMilliseconds}ms");
 	}
 
+	private static string TwoPlayerLabel()
+	{
+		var text = Loc.Str("OptionsTwoPlayers");
+		return text.Contains("MISSING") ? "Two Players" : text;
+	}
+
+	private void ToggleTwoPlayers()
+	{
+		Save.Instance.TwoPlayers = !Save.Instance.TwoPlayers;
+		if (Game.IsMidTransition)
+			return;
+
+		// restart the level so the new mode takes effect
+		var entry = Entry;
+		Game.Goto(new Transition()
+		{
+			Mode = Transition.Modes.Replace,
+			Scene = () => new World(entry),
+			ToPause = true,
+			ToBlack = new AngledWipe(),
+			Saving = true
+		});
+	}
+
+	/// <summary>
+	/// Runs the action with the second player's camera swapped in as the active Camera
+	/// </summary>
+	public void RunWithSecondCamera(Action action)
+	{
+		var first = Camera;
+		Camera = Camera2;
+		try
+		{
+			action();
+		}
+		finally
+		{
+			Camera2 = Camera;
+			Camera = first;
+		}
+	}
+
 	public override void Disposed()
 	{
 		SetPaused(false);
@@ -176,6 +234,11 @@ public class World : Scene
 
 		postTarget?.Dispose();
 		postTarget = null;
+
+		if (splitTargets != null)
+			foreach (var split in splitTargets)
+				split.Dispose();
+		splitTargets = null;
 	}
 
 	public T Request<T>() where T : Actor, IRecycle, new()
@@ -353,10 +416,11 @@ public class World : Scene
 			}
 
 			// ONLY update the player when dead
-			if (Get<Player>() is Player player && player.Dead)
+			var deadPlayer = Get<Player>(p => p.Dead);
+			if (deadPlayer != null)
 			{
-				player.Update();
-				player.LateUpdate();
+				deadPlayer.Update();
+				deadPlayer.LateUpdate();
 				ResolveChanges();
 				return;
 			}
@@ -384,6 +448,8 @@ public class World : Scene
 
 			// update all actors
 			var view = Camera.Frustum.GetBoundingBox().Inflate(10);
+			if (TwoPlayer)
+				view = view.Conflate(Camera2.Frustum.GetBoundingBox().Inflate(10));
 			debugUpdateCount = 0;
 			foreach (var actor in Actors)
 				if (actor.UpdateOffScreen || actor.WorldBounds.Intersects(view))
@@ -657,6 +723,50 @@ public class World : Scene
 
 	public override void Render(Target target)
 	{
+		if (!TwoPlayer)
+		{
+			RenderView(target, -1);
+			return;
+		}
+
+		// split screen: each player gets their own half of the screen
+		int halfWidth = target.Width / 2;
+		if (splitTargets == null || splitTargets[0].Width != halfWidth || splitTargets[0].Height != target.Height)
+		{
+			if (splitTargets != null)
+				foreach (var split in splitTargets)
+					split.Dispose();
+
+			splitTargets = 
+			[
+				new Target(GraphicsDevice, halfWidth, target.Height, [TextureFormat.Color, TextureFormat.Depth16]),
+				new Target(GraphicsDevice, halfWidth, target.Height, [TextureFormat.Color, TextureFormat.Depth16])
+			];
+		}
+
+		RenderView(splitTargets[0], 0);
+
+		var first = Camera;
+		Camera = Camera2;
+		RenderView(splitTargets[1], 1);
+		Camera2 = Camera;
+		Camera = first;
+
+		target.Clear(Color.Black, 1, 0, ClearMask.All);
+		batch.Image(splitTargets[0], Vec2.Zero, Vec2.Zero, Vec2.One, 0, Color.White);
+		batch.Image(splitTargets[1], new Vec2(halfWidth, 0), Vec2.Zero, Vec2.One, 0, Color.White);
+		batch.Rect(new Rect(halfWidth - 1, 0, 2, target.Height), Color.Black);
+		batch.Render(target);
+		batch.Clear();
+
+		RenderUI(target, 0, 0);
+	}
+
+	/// <summary>
+	/// Renders the world from the current Camera. view: -1 = normal single player screen, 0/1 = split screen halves
+	/// </summary>
+	private void RenderView(Target target, int view)
+	{
 		debugRndTimer.Restart();
 		Camera.Target = target;
 		target.Clear(0x444c83, 1, 0, ClearMask.All);
@@ -778,83 +888,97 @@ public class World : Scene
 			ApplyPostEffects();
 		}
 
-		// ui
+		// player label in split screen mode
+		if (view >= 0)
 		{
 			batch.PushSampler(new TextureSampler(TextureFilter.Linear, TextureWrap.Clamp, TextureWrap.Clamp));
-			var bounds = new Rect(0, 0, target.Width, target.Height);
-			var font = Language.Current.SpriteFont;
-
-			foreach (var actor in All<IHaveUI>())
-				(actor as IHaveUI)!.RenderUI(batch, bounds);
-
-			// pause menu
-			if (Paused)
-			{
-				batch.Rect(bounds, Color.Black * 0.70f);
-				pauseMenu.Render(batch, bounds.Center);
-			}
-
-			// debug
-			if (DebugDraw)
-			{
-				var updateMs = debugUpdTimer.Elapsed.TotalMilliseconds;
-				var renderMs = lastDebugRndTime.TotalMilliseconds;
-				var frameMs = debugFpsTimer.Elapsed.TotalMilliseconds;
-				var fps = (int)(1000/frameMs);
-				debugFpsTimer.Restart();
-
-				batch.Text(font, $"Draws: {state.Calls}, Tris: {state.Triangles}, Upd: {debugUpdateCount}", bounds.BottomLeft, new Vec2(0, 1), Color.Red);
-				batch.Text(font, $"u:{updateMs:0.00}ms | r:{renderMs:0.00}ms | f:{frameMs:0.00}ms / {fps}fps", bounds.BottomLeft - new Vec2(0, font.LineHeight), new Vec2(0, 1), Color.Red);
-				batch.Text(font, $"m: {Entry.Map}, c: {Entry.CheckPoint}, s: {Entry.Submap}", bounds.BottomLeft - new Vec2(0, font.LineHeight * 2), new Vec2(0, 1), Color.Red);
-			}
-
-			// stats
-			{
-				var at = bounds.TopLeft + new Vec2(4, 8);
-				if (IsInEndingArea || Save.Instance.SpeedrunTimer)
-				{
-					UI.Timer(batch, Save.CurrentRecord.Time, at);
-					at.Y += UI.IconSize + 4;
-				}
-
-				if (strawbCounterEase > 0)
-				{
-					var wiggle = 1 + MathF.Sin(strawbCounterWiggle * MathF.Tau * 2) * strawbCounterWiggle * .3f;
-
-					batch.PushMatrix(
-						Matrix3x2.CreateTranslation(0, -UI.IconSize / 2) * 
-						Matrix3x2.CreateScale(wiggle) * 
-						Matrix3x2.CreateTranslation(at + new Vec2(-60 * (1 - Ease.Cube.Out(strawbCounterEase)), UI.IconSize / 2)));
-					UI.Strawberries(batch, Save.CurrentRecord.Strawberries.Count, Vec2.Zero);
-					batch.PopMatrix();
-				}
-
-				// show version number when paused / in ending area
-				if (IsInEndingArea || Paused)
-				{
-                    UI.Text(batch, Game.VersionString, bounds.BottomLeft + new Vec2(4, -4) * Game.RelativeScale, new Vec2(0, 1), Color.White * 0.25f);
-                }
-			}
-
-			// overlay
-			{
-				var scroll = -new Vec2(1.25f, 0.9f) * (float)(Time.Elapsed.TotalSeconds) * 0.05f;
-
-				batch.PushBlend(BlendMode.Add);
-				batch.Image(Assets.Textures["overworld/overlay"], 
-					bounds.TopLeft, bounds.TopRight, bounds.BottomRight, bounds.BottomLeft,
-					scroll + new Vec2(0, 0), scroll + new Vec2(1, 0), scroll + new Vec2(1, 1), scroll + new Vec2(0, 1),
-					Color.White * 0.10f);
-				batch.PopBlend();
-			}
-
+			UI.Text(batch, view == 0 ? "P1" : "P2", new Vec2(8, 8), Vec2.Zero, view == 0 ? new Color(0xff8a5c) : new Color(0xb9b9e8));
 			batch.PopSampler();
-			batch.Render(Camera.Target);
+			batch.Render(target);
 			batch.Clear();
 		}
 
+		// ui
+		if (view < 0)
+			RenderUI(target, state.Calls, state.Triangles);
+
 		lastDebugRndTime = debugRndTimer.Elapsed;
 		debugRndTimer.Stop();
+	}
+
+	private void RenderUI(Target target, long calls, long triangles)
+	{
+		batch.PushSampler(new TextureSampler(TextureFilter.Linear, TextureWrap.Clamp, TextureWrap.Clamp));
+		var bounds = new Rect(0, 0, target.Width, target.Height);
+		var font = Language.Current.SpriteFont;
+
+		foreach (var actor in All<IHaveUI>())
+			(actor as IHaveUI)!.RenderUI(batch, bounds);
+
+		// pause menu
+		if (Paused)
+		{
+			batch.Rect(bounds, Color.Black * 0.70f);
+			pauseMenu.Render(batch, bounds.Center);
+		}
+
+		// debug
+		if (DebugDraw)
+		{
+			var updateMs = debugUpdTimer.Elapsed.TotalMilliseconds;
+			var renderMs = lastDebugRndTime.TotalMilliseconds;
+			var frameMs = debugFpsTimer.Elapsed.TotalMilliseconds;
+			var fps = (int)(1000/frameMs);
+			debugFpsTimer.Restart();
+
+			batch.Text(font, $"Draws: {calls}, Tris: {triangles}, Upd: {debugUpdateCount}", bounds.BottomLeft, new Vec2(0, 1), Color.Red);
+			batch.Text(font, $"u:{updateMs:0.00}ms | r:{renderMs:0.00}ms | f:{frameMs:0.00}ms / {fps}fps", bounds.BottomLeft - new Vec2(0, font.LineHeight), new Vec2(0, 1), Color.Red);
+			batch.Text(font, $"m: {Entry.Map}, c: {Entry.CheckPoint}, s: {Entry.Submap}", bounds.BottomLeft - new Vec2(0, font.LineHeight * 2), new Vec2(0, 1), Color.Red);
+		}
+
+		// stats
+		{
+			var at = bounds.TopLeft + new Vec2(4, 8);
+			if (IsInEndingArea || Save.Instance.SpeedrunTimer)
+			{
+				UI.Timer(batch, Save.CurrentRecord.Time, at);
+				at.Y += UI.IconSize + 4;
+			}
+
+			if (strawbCounterEase > 0)
+			{
+				var wiggle = 1 + MathF.Sin(strawbCounterWiggle * MathF.Tau * 2) * strawbCounterWiggle * .3f;
+
+				batch.PushMatrix(
+					Matrix3x2.CreateTranslation(0, -UI.IconSize / 2) * 
+					Matrix3x2.CreateScale(wiggle) * 
+					Matrix3x2.CreateTranslation(at + new Vec2(-60 * (1 - Ease.Cube.Out(strawbCounterEase)), UI.IconSize / 2)));
+				UI.Strawberries(batch, Save.CurrentRecord.Strawberries.Count, Vec2.Zero);
+				batch.PopMatrix();
+			}
+
+			// show version number when paused / in ending area
+			if (IsInEndingArea || Paused)
+			{
+                    UI.Text(batch, Game.VersionString, bounds.BottomLeft + new Vec2(4, -4) * Game.RelativeScale, new Vec2(0, 1), Color.White * 0.25f);
+                }
+		}
+
+		// overlay
+		{
+			var scroll = -new Vec2(1.25f, 0.9f) * (float)(Time.Elapsed.TotalSeconds) * 0.05f;
+
+			batch.PushBlend(BlendMode.Add);
+			batch.Image(Assets.Textures["overworld/overlay"], 
+				bounds.TopLeft, bounds.TopRight, bounds.BottomRight, bounds.BottomLeft,
+				scroll + new Vec2(0, 0), scroll + new Vec2(1, 0), scroll + new Vec2(1, 1), scroll + new Vec2(0, 1),
+				Color.White * 0.10f);
+			batch.PopBlend();
+		}
+
+		batch.PopSampler();
+		batch.Render(target);
+		batch.Clear();
 	}
 
 	private void ApplyPostEffects()

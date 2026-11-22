@@ -96,13 +96,38 @@ FragmentOutput fragment_main(VertexOutput input)
 	float fade = Map(depth, 0.9, 1, 1, 0);
 	float3  col = src.rgb;
 
-	// lighten texture color based on normal
-	float lighten = max(0.0, -dot(input.normal, (float3)u_sun));
-	col = lerp(col, float3(1,1,1), lighten * 0.10 * u_effects);
+	float3 sun = (float3)u_sun;
+	float lit = max(0.0, -dot(input.normal, sun));
+	float shadow = max(0.0, dot(input.normal, sun));
 
-	// shadow
-	float darken = max(0.0, dot(input.normal, (float3)u_sun));
-	col = lerp(col, float3(4/255.0, 27/255.0, 44/255.0), darken * 0.80 * u_effects);
+	// soft stepped lighting for a richer painted look
+	lit = lerp(lit, smoothstep(0.05, 0.85, lit), 0.6);
+	shadow = lerp(shadow, smoothstep(0.05, 0.85, shadow), 0.6);
+
+	// warm sunlight on lit faces
+	col *= lerp(float3(1,1,1), float3(1.10, 1.03, 0.90), lit * 0.55 * u_effects);
+	col = lerp(col, float3(1.0, 0.97, 0.90), lit * 0.14 * u_effects);
+
+	// hemisphere light: sky tint from above, cool bounce from below
+	float up = clamp(input.normal.z, -1.0, 1.0);
+	col += float3(0.05, 0.07, 0.11) * max(up, 0.0) * u_effects;
+	col *= lerp(float3(1,1,1), float3(0.88, 0.90, 1.05), max(-up, 0.0) * 0.5 * u_effects);
+
+	// richer, bluer-violet shadows
+	col = lerp(col, float3(14/255.0, 22/255.0, 58/255.0), shadow * 0.78 * u_effects);
+
+	// gentle saturation and contrast boost
+	float luma = dot(col, float3(0.299, 0.587, 0.114));
+	col = lerp(float3(luma, luma, luma), col, 1.0 + 0.18 * u_effects);
+	col = lerp(col, col * col * (3.0 - 2.0 * col), 0.20 * u_effects);
+
+	// soft light shimmer
+	float shimmer = 0.5 + 0.5 * sin(u_time * 1.5 + input.world.x * 0.05 + input.world.y * 0.05);
+	col += float3(0.020, 0.015, 0.005) * shimmer * lit * u_effects;
+
+	// aerial perspective: distant things drift toward the fog color
+	float haze = smoothstep(0.30, 0.95, depth);
+	col = lerp(col, u_vertical_fog_color.rgb, haze * 0.30 * u_effects);
 
 	// passthrough mode
 	col = lerp(col, u_silhouette_color.rgb, u_silhouette);

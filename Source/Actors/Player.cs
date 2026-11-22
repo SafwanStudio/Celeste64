@@ -66,6 +66,12 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	private const float FeatherExitXYMult = .5f;
 	private const float FeatherExitZSpeed = 60;
 
+	// variable jump height: releasing the button early cuts the upward speed to this
+	private const float JumpCutSpeed = 45;
+	// air control
+	private const float AirTurnSpeed = MathF.Tau * 1.1f;
+	private const float AirBrake = 380;
+
 	static private readonly Color CNormal = 0xdb2c00;
 	static private readonly Color CNoDash = 0x6ec0ff;
 	static private readonly Color CTwoDashes = 0xfa91ff;
@@ -188,6 +194,13 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 		&& stateMachine.State != States.Cassette
 		&& stateMachine.State != States.Dead;
 
+	/// <summary>0 = player one, 1 = player two (only used in two player mode)</summary>
+	public int PlayerIndex = 0;
+
+	private PlayerInput? playerInput;
+	public new PlayerInput Controls 
+		=> playerInput ??= PlayerInput.Create(Game.Instance, World.TwoPlayer, PlayerIndex);
+
 	public Player()
 	{
 		PointShadowAlpha = 1.0f;
@@ -235,6 +248,14 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	public override void Added()
 	{
+		if (PlayerIndex == 1 && World.TwoPlayer)
+			World.RunWithSecondCamera(AddedCore);
+		else
+			AddedCore();
+	}
+
+	private void AddedCore()
+	{
 		if (World.Entry.Reason == World.EntryReasons.Respawned)
 		{
 			cameraTargetForward = storedCameraForward;
@@ -261,6 +282,15 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	}
 
 	public override void Update()
+	{
+		Controls.Tick(Time.Delta);
+		if (PlayerIndex == 1 && World.TwoPlayer)
+			World.RunWithSecondCamera(UpdateCore);
+		else
+			UpdateCore();
+	}
+
+	private void UpdateCore()
 	{
 		// only update camera if not dead
 		if (stateMachine.State != States.Respawn && stateMachine.State != States.Dead && 
@@ -389,6 +419,14 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	}
 
 	public override void LateUpdate()
+	{
+		if (PlayerIndex == 1 && World.TwoPlayer)
+			World.RunWithSecondCamera(LateUpdateCore);
+		else
+			LateUpdateCore();
+	}
+
+	private void LateUpdateCore()
 	{
 		// ground checks
 		{
@@ -625,6 +663,13 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	public void SetHairColor(Color color)
 	{
+		// player two has (nearly) black hair, still tinted so dash state stays readable
+		if (PlayerIndex == 1)
+		{
+			var v = color.ToVector4();
+			color = new Color(v.X * .16f, v.Y * .16f, v.Z * .22f, 1.0f);
+		}
+
 		foreach (var mat in Model.Materials)
 		{
 			if (mat.Name == "Hair")
@@ -724,6 +769,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void Jump()
 	{
+		jumpCuttable = true;
 		Position = Position with { Z = coyoteZ };
 		holdJumpSpeed = velocity.Z = JumpSpeed;
 		tHoldJump = JumpHoldTime;
@@ -747,6 +793,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void WallJump()
 	{
+		jumpCuttable = true;
 		holdJumpSpeed = velocity.Z = JumpSpeed;
 		tHoldJump = JumpHoldTime;
 		autoJump = false;
@@ -763,6 +810,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void SkidJump()
 	{
+		jumpCuttable = true;
 		Position = Position with { Z = coyoteZ };
 		holdJumpSpeed = velocity.Z = SkidJumpSpeed;
 		tHoldJump = SkidJumpHoldTime;
@@ -787,6 +835,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void DashJump()
 	{
+		jumpCuttable = true;
 		Position = Position with { Z = coyoteZ };
 		velocity.Z = DashJumpSpeed;
 		holdJumpSpeed = DashJumpHoldSpeed;
@@ -948,6 +997,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	private float tHoldJump;
 	private float holdJumpSpeed;
 	private bool autoJump;
+	private bool jumpCuttable;
 	private float tNoMove;
 	private float tFootstep;
 
@@ -959,6 +1009,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void StNormalExit()
 	{
+		jumpCuttable = false;
 		tHoldJump = 0;
 		tNoMove = 0;
 		autoJump = false;
@@ -981,6 +1032,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 						if (Controls.Dash.ConsumePress())
 						{
+							World.TalkingPlayer = this;
 							npc.Interact(this);
 							return;
 						}
@@ -1100,23 +1152,33 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 			}
 			else
 			{
-				float accel;
-				if (velXY.LengthSquared() >= MaxSpeed * MaxSpeed && Vec2.Dot(RelativeMoveInput.Normalized(), velXY.Normalized()) >= .7f)
-				{
-					accel = PastMaxDeccel;
+				// air control: steer the velocity direction toward the stick direction while
+				// keeping momentum, and let the player brake or speed up while in the air
+				var airInput = RelativeMoveInput.Normalized();
+				float airSpeed = velXY.Length();
 
-					var dot = Vec2.Dot(RelativeMoveInput.Normalized(), targetFacing);
-					accel *= Calc.ClampedMap(dot, -1, 1, AirAccelMultMax, AirAccelMultMin);
+				if (airSpeed < 2)
+				{
+					// (nearly) standing still: just accelerate toward the stick
+					Calc.Approach(ref velXY, airInput * MaxSpeed, Acceleration * Time.Delta);
 				}
 				else
 				{
-					accel = Acceleration;
+					var airDir = velXY / airSpeed;
+					var turned = Calc.RotateToward(airDir, airInput, AirTurnSpeed * Time.Delta, 0);
+					if (turned.LengthSquared() > 0.0001f)
+						airDir = turned.Normalized();
 
-					var dot = Vec2.Dot(RelativeMoveInput.Normalized(), targetFacing);
-					accel *= Calc.ClampedMap(dot, -1, 1, AirAccelMultMin, AirAccelMultMax);
+					float align = Vec2.Dot(airDir, airInput);
+					if (align < 0)
+						airSpeed = Calc.Approach(airSpeed, 0, AirBrake * -align * Time.Delta);
+					else if (airSpeed < MaxSpeed)
+						airSpeed = Calc.Approach(airSpeed, MaxSpeed, Acceleration * Time.Delta);
+					else
+						airSpeed = Calc.Approach(airSpeed, MaxSpeed, PastMaxDeccel * Time.Delta);
+
+					velXY = airDir * airSpeed;
 				}
-
-				Calc.Approach(ref velXY, RelativeMoveInput * MaxSpeed, accel * Time.Delta);
 			}
 
 			velocity = velocity.WithXY(velXY);
@@ -1160,6 +1222,20 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 			WallJump();
 		else
 		{
+			// variable jump height: letting go of the button early cuts the jump short
+			if (jumpCuttable)
+			{
+				if (autoJump || velocity.Z <= 0)
+					jumpCuttable = false;
+				else if (!Controls.Jump.Down)
+				{
+					if (velocity.Z > JumpCutSpeed)
+						velocity.Z = JumpCutSpeed;
+					tHoldJump = 0;
+					jumpCuttable = false;
+				}
+			}
+
 			if (tHoldJump > 0 && (autoJump || Controls.Jump.Down))
 			{
 				if (velocity.Z < holdJumpSpeed)

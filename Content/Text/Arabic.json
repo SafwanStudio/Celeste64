@@ -1,0 +1,778 @@
+{
+	"ID": "arabic",
+	"Label": "ﺔﻴﺑﺮﻌﻟﺍ",
+	"Font": "DejaVuSans",
+	"Strings": {
+		"Confirm": "ﺪﻴﻛﺄﺗ",
+		"Cancel": "ﺀﺎﻐﻟﺇ",
+		"Back": "ﻉﻮﺟﺭ",
+		"Continue": "ﺔﻌﺑﺎﺘﻣ",
+		"Restart": "ﺓﺩﺎﻋﺇ",
+		"Start": "ﺃﺪﺑﺍ",
+		"Exit": "ﺝﻭﺮﺧ",
+		"RestartLevel": "ﺔﻠﺣﺮﻤﻟﺍ ﺓﺩﺎﻋﺇﻭ ﻆﻔﺤﻟﺍ ﺢﺴﻣ",
+		"PauseTitle": "ﺖﻗﺆﻣ ﻑﺎﻘﻳﺇ",
+		"PauseResume": "ﻑﺎﻨﺌﺘﺳﺍ",
+		"PauseRetry": "ﺔﻟﻭﺎﺤﻤﻟﺍ ﺓﺩﺎﻋﺇ",
+		"PauseOptions": "ﺕﺍﺭﺎﻴﺨﻟﺍ",
+		"PauseSaveQuit": "ﺝﻭﺮﺧﻭ ﻆﻔﺣ",
+		"OptionsTitle": "ﺕﺍﺭﺎﻴﺨﻟﺍ",
+		"OptionsFullscreen": "ﺔﺷﺎﺸﻟﺍ ﺀﻞﻣ",
+		"OptionsZGuide": "Z ﻞﻴﻟﺩ",
+		"OptionsTimer": "ﺖﻗﺆﻤﻟﺍ",
+		"OptionsBGM": "ﻰﻘﻴﺳﻮﻤﻟﺍ",
+		"OptionsSFX": "ﺕﺍﺮﺛﺆﻤﻟﺍ",
+		"OptionsInvertCamera": "ﺍﺮﻴﻣﺎﻜﻟﺍ ﺲﻜﻋ",
+		"OptionsLanguage": "ﺔﻐﻠﻟﺍ",
+		"CameraInvertNone": "ﻥﻭﺪﺑ",
+		"CameraInvertX": "X",
+		"CameraInvertY": "Y",
+		"CameraInvertBoth": "ﻥﺎﻨﺛﻻﺍ",
+		"Level.0_FORSAKEN_CITY.Name": "ﺓﺭﻮﺠﻬﻤﻟﺍ ﺔﻨﻳﺪﻤﻟﺍ",
+		"Level.0_FORSAKEN_CITY.Label": "ﺔﺳﺩﺎﺴﻟﺍ ﻯﺮﻛﺬﻠﻟ ﺖﻌﻨﺻ\nﺖﺴﻴﻠﻴﺳ ﻖﻳﺮﻓ ﻦﻣ",
+		"OptionsTwoPlayers": "ﻦﻴﺒﻋﻻ ﻊﺿﻭ"
+	},
+	"Dialog": {
+		"Granny1": [
+			{
+				"Face": "granny/Laugh",
+				"Voice": "granny/granny1_01_g1",
+				"Text": "ﺎﻨﻫ ﺍﺪﺟ ﺩﺭﺎﺑ ﻮﺠﻟﺍ\n.ﻲﻃﺍﺮﺿ ﻯﺭﺃ ﻲﻨﻧﺃ ﺔﺟﺭﺪﻟ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/granny1_02_m1",
+				"Text": ".ﻲﺗﺪﺟ ﺎﻳ ﺎﻀﻳﺃ ﻚﺘﻳﺅﺭ ﻞﻴﻤﺠﻟﺍ ﻦﻣ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny1_03_g2",
+				"Text": ".ﻚﺗﺩﻮﻌﺑ ﺎﺒﺣﺮﻣ ،ﻲﺗﺮﻴﻐﺻ ﺎﻳ ﻼﻫﺃ .ﻩﺎﻫ\n.ﻞﻳﻮﻃ ﺖﻗﻭ ﻰﻀﻣ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/granny1_04_m2",
+				"Text": ".ﺔﻟﻮﻐﺸﻣ ﺖﻨﻛ ،ﻢﻌﻧ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny1_05_g3",
+				"Text": "!ﻚﻟﺫ ﺖﻌﻤﺳ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny1_06_g4",
+				"Text": "!ﺎﺑﺎﺘﻛ ﺐﺘﻜﺗ ﺎﻨﻫ ﺔﻘﻴﻧﻷﺍ ﺓﺪﻴﺴﻟﺍ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/granny1_07_m3",
+				"Text": ".ﻚﻟﺫ ،ﻩﺁ\n...ﺮﻴﺒﻜﻟﺍ ﺮﻣﻷﺎﺑ ﺲﻴﻟ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny1_08_g5",
+				"Text": "؟ﺖﻴﺗﺃ ﺍﺬﻬﻟ ﻞﻫﻭ ،ﻢﻤﻫ\n؟ﺮﻴﺒﻜﻟﺍ ﻉﻭﺮﺸﻤﻟﺍ ﻥﺄﺸﺑ ﺔﻘﻠﻗ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/granny1_09_m4",
+				"Text": ".ﺏﺎﺘﻜﻟﺍ ﺹﻮﺼﺨﺑ ﺐﻳﺮﻏ ﻞﻜﺸﺑ ﺔﺋﺩﺎﻫ ﺎﻧﺃ ،ﻻ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/granny1_10_m5",
+				"Text": "ﺓﺰﻳﺰﻋ ﻯﺮﻛﺫ ﺓﺭﺎﻳﺯ ﻊﻴﻄﺘﺳﺃ ﻲﻨﻧﺇ ﻢﺛ\n؟ﺏﺍﻮﺠﺘﺳﻼﻟ ﺽﺮﻌﺗﺃ ﻥﺃ ﻥﻭﺩ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny1_11_g6",
+				"Text": "ﻙﺎﻨﻫ ﻥﺃ ﻑﺮﻋﺃ ،ﺎﻨﺴﺣ ﺎﻨﺴﺣ\n.ﻞﻔﻄﺗﺃ ﻦﻟ ﻲﻨﻨﻜﻟ ،ﺪﻳﺰﻤﻟﺍ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny1_12_g7",
+				"Text": ".ﺮﻛﺬﺘﻟﺎﺑ ﻥﺫﺇ ﻲﻌﺘﻤﺘﺳﺍ"
+			}
+		],
+		"Granny2": [
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny2_01_g1",
+				"Text": "؟ﺎﻘﺣ ﻚﺠﻋﺰﻳ ﻱﺬﻟﺍ ﺎﻣ ،ﺎﻴﻫ"
+			},
+			{
+				"Face": "madeline/Angry",
+				"Voice": "madeline/granny2_02_m1",
+				"Text": ".ﺓﺮﻄﻴﺴﻟﺍ ﺖﺤﺗ ﻊﺿﻮﻟﺍ .ﺀﻲﺷ ﻻ"
+			},
+			{
+				"Face": "granny/Laugh",
+				"Voice": "granny/granny2_03_g2",
+				"Text": ".ﺍﺪﺑﺃ ﺮﻴﻐﺘﺗ ﻻ ﺀﺎﻴﺷﻷﺍ ﺾﻌﺑ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Text": "..."
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/granny2_04_m2",
+				"Text": "...ﻂﻘﻓ ﺮﻣﻷﺍ\n.ﺓﺮﻴﺒﻛ ﺓﻮﻄﺧ ﻮﻄﺧﺃ ﻲﻨﻧﺃ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/granny2_05_m3",
+				"Text": ".ﺓﺪﻴﺟ ﺓﻮﻄﺧ ﺎﻬﻧﺃ ﻑﺮﻋﺃ\n...ﻩﺪﻳﺭﺃ ﺎﻣ ﺎﻬﻧﺇ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/granny2_06_m4",
+				"Text": "...ﻲﻨﻧﺄﻛﻭ ﺮﻌﺷﺃ ﺖﻟﺯ ﺎﻣ ﻲﻨﻨﻜﻟ...\n.ﻑﺮﺟ ﻕﻮﻓ ﻦﻣ ﺰﻔﻗﺃ..."
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny2_07_g3",
+				"Text": ".ﻥﺎﻤﻳﺇ ﺓﺰﻔﻗ ﺎﻬﻧﺃ ﻭﺪﺒﻳ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/granny2_08_m5",
+				"Text": ".ﻚﻟﺫ ﻦﻇﺃ ...ﻢﻌﻧ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny2_09_g4",
+				"Text": ".ﺔﻋﺎﺠﺷ ﺎﻤﺋﺍﺩ ﺖﻨﻛ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny2_10_g5",
+				"Text": "ﺖﺛﺪﺤﺗ ﻞﻫ ﻦﻜﻟ\n؟ﻚﻨﻣ ﺮﺧﻵﺍ ﺀﺰﺠﻟﺍ ﻚﻟﺫ ﻊﻣ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/granny2_11_m6",
+				"Text": ".ﺎﻨﻫ ﻱﺩﻮﺟﻭ ﺐﺒﺳ ﺍﺬﻫ ﻥﺃ ﻦﻇﺃ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny2_12_g6",
+				"Text": "؟ﻝﺎﺣ ﻱﺃ ﻰﻠﻋ ﺓﺮﻴﻐﺼﻟﺍ ﺔﺒﻳﺮﻐﻟﺍ ﻩﺬﻫ ﻦﻳﺃ"
+			}
+		],
+		"Granny3": [
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny3_01_g1",
+				"Text": "ﺎﻤﺋﺍﺩ ﺭﺪﻗﺃ ﻲﻨﻧﺃ ﻦﻴﻤﻠﻌﺗ\n...ﻲﺑ ﻦﻳﺮﻜﻔﺗ ﻚﻧﺃ"
+			},
+			{
+				"Face": "granny/Default",
+				"Voice": "granny/granny3_02_g2",
+				"Text": "ﻚﻨﻜﻤﻳ ﻞﻫ ،ﺔﻣﺩﺎﻘﻟﺍ ﺓﺮﻤﻟﺍ ﻲﻓ ﻦﻜﻟ\n؟ﻼﻴﻠﻗ ﺄﻓﺩﺃ ﻥﺎﻜﻤﻟﺍ ﻞﻌﺟ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/granny3_03_m1",
+				"Text": ".ﻩﺮﻛﺬﺗﺃ ﻻ ﺍﺬﻜﻫ"
+			}
+		],
+		"Theo1": [
+			{
+				"Face": "theo/Default",
+				"Voice": "theo/theo1_01_t1",
+				"Text": "!!ﺔﻟﻭﺍﺮﻓ"
+			},
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/theo1_02_m1",
+				"Text": "!ﻮﻴﺛ"
+			},
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/theo1_03_m2",
+				"Text": ".ﻚﺘﻳﺅﺭ ﻊﺋﺍﺮﻟﺍ ﻦﻣ"
+			},
+			{
+				"Face": "theo/Smug",
+				"Voice": "theo/theo1_04_t2",
+				"Text": ".ﺔﺒﻳﺮﻐﻟﺍ ﺎﻬﺘﻳﺃ ﻚﻟﺬﻛ ﺖﻧﺃﻭ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/theo1_05_m3",
+				"Text": "ﻚﻴﻠﻋ ﺩﺮﻟﺍ ﺖﻴﺴﻧ\n؟ﻚﻟﺬﻛ ﺲﻴﻟﺃ ،ﻯﺮﺧﺃ ﺓﺮﻣ"
+			},
+			{
+				"Face": "theo/Default",
+				"Voice": "theo/theo1_06_t3",
+				"Text": ".ﺱﺄﺑ ﻻ ،ﻻ ﻻ"
+			},
+			{
+				"Face": "theo/Smug",
+				"Voice": "theo/theo1_07_t4",
+				"Text": "ﺲﻜﻴﻟﺃ ﻰﻠﻋ ﻚﺘﻓﺮﻋ ﺍﺬﻬﻟ\n.ﺮﻓﺎﺳﺃ ﻥﺃ ﻞﺒﻗ"
+			},
+			{
+				"Face": "theo/Proud",
+				"Voice": "theo/theo1_08_t5",
+				"Text": "ﻱﺩﺎﻣ ﺭﺎﺒﺧﺃ ﻰﻠﻋ ﻞﺼﺣﺃ ﻥﻵﺍ\n.ﺔﻘﻠﻘﻟﺍ ﻲﺘﺧﺃ ﻦﻣ"
+			},
+			{
+				"Face": "theo/Smug",
+				"Voice": "theo/theo1_09_t6",
+				"Text": "ﺖﺒﺳ ﻞﻛ ﻲﺑ ﻞﺼﺘﺗ\n.ﺔﻋﺎﺴﻟﺎﻛ ،ﺎﻣﺎﻤﺗ ﺔﻴﻧﺎﺜﻟﺍ ﻲﻓ"
+			},
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/theo1_10_m4",
+				"Text": "!ﺔﻴﻛﺫ ﺔﻄﺧ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/theo1_11_m5",
+				"Text": ".ﻞﻀﻓﻷﺍ ﻲﻫ ...ﺲﻜﻴﻟﺃ"
+			},
+			{
+				"Face": "theo/Smug",
+				"Voice": "theo/theo1_12_t7",
+				"Text": "!ﻥﺎﺘﻘﺷﺎﻋ ﺎﻤﻜﻧﺃ ﺎﻣﺎﻤﺗ ﺢﺿﺍﻭ"
+			},
+			{
+				"Face": "theo/Default",
+				"Voice": "theo/theo1_13_t8",
+				"Text": ".ﻚﻟ ﺍﺬﻫ ﺐﺣﺃ"
+			}
+		],
+		"Theo2": [
+			{
+				"Face": "theo/Tired",
+				"Voice": "theo/theo2_01_t1",
+				"Text": "ﺝﺮﺒﻟﺍ ﺍﺬﻫ ﻖﻠﺴﺗ\n.ﺍﺪﺑﺃ ﻲﻠﻋ ﻼﻬﺳ ﻦﻜﻳ ﻢﻟ"
+			},
+			{
+				"Face": "theo/Proud",
+				"Voice": "theo/theo2_02_t2",
+				"Text": ".ﺔﻌﺋﺍﺭ ﺭﻮﺻ ﻰﻠﻋ ﺖﻠﺼﺣ ﻲﻨﻨﻜﻟ"
+			},
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/theo2_03_m1",
+				"Text": "!ﻊﺋﺍﺭ ﺍﺬﻫ"
+			},
+			{
+				"Face": "theo/Default",
+				"Voice": "theo/theo2_04_t3",
+				"Text": "ﺭﻮﺼﻟﺍ ﻩﺬﻫ ﻖﻟﺄﺘﺘﺳ\n.ﺽﺮﻌﻤﻟﺍ ﻲﻓ"
+			},
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/theo2_05_m2",
+				"Text": "؟!ﺎﺿﺮﻌﻣ ﻢﻴﻘﺘﺳ"
+			},
+			{
+				"Face": "theo/Proud",
+				"Voice": "theo/theo2_06_t4",
+				"Text": "!ﺮﻴﺜﻛ ﻦﻣ ﻝﻭﻷﺍ ﻥﻮﻜﻳ ﻥﺃ ﻞﻣﺁﻭ ،ﻞﺟﺃ"
+			},
+			{
+				"Face": "theo/Default",
+				"Voice": "theo/theo2_07_t5",
+				"Text": ".ﻲﺗﺍﺮﻔﺳ ﻦﻣ ﺭﻮﺻ ﺩﺮﺠﻣ ﺎﻬﻧﺇ"
+			},
+			{
+				"Face": "theo/Smug",
+				"Voice": "theo/theo2_08_t7",
+				"Text": ":ﻥﺍﻮﻨﻌﺑ\nﺔﻳﺮﻀﺤﻟﺍ ﺔﻟﺰﻌﻟﺍ ﻂﺳﻭ ﺔﻴﻧﺎﺴﻧﻹﺍ"
+			},
+			{
+				"Face": "theo/Default",
+				"Voice": "theo/theo2_09_t8",
+				"Text": "ﺔﻧﻮﻠﻣﻭ ﺔﻤﻋﺎﻧ ﻪﻳﺮﺗﺭﻮﺑ ﺭﻮﺻ\n...ﻲﺗﺍﺮﻔﺳ ﻲﻓ ﻢﻬﺘﻠﺑﺎﻗ ﻦﻴﻌﺋﺍﺭ ﺹﺎﺨﺷﻷ"
+			},
+			{
+				"Face": "theo/Upset",
+				"Voice": "theo/theo2_10_t9",
+				"Text": "ﺔﻨﻳﺪﻤﻟﺍ ﺔﻴﺸﺣﻭ ﻞﺑﺎﻘﻣ ﻲﻓ...\n.ﺔﺜﻳﺪﺤﻟﺍ ﺔﻴﺳﺎﻘﻟﺍ ﺔﻴﻟﺎﻤﺳﺃﺮﻟﺍ"
+			},
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/theo2_11_m3",
+				"Text": "!ﺍﺪﺟ ﺎﻴﻨﻓ ...ﻭﺪﺒﻳ ﺍﺬﻫ !!ﻮﻴﺛ"
+			},
+			{
+				"Face": "theo/Smug",
+				"Voice": "theo/theo2_12_t10",
+				"Text": ".ﺍﺬﻜﻫ ﺔﺸﻫﺪﻨﻣ ﺪﺒﺗ ﻻ"
+			},
+			{
+				"Face": "theo/Proud",
+				"Voice": "theo/theo2_13_t11",
+				"Text": ".ﺓﺩﺪﻌﺘﻣ ﻢﻟﺍﻮﻋ ﻱﻮﺘﺣﺃ ﺎﻧﺃ"
+			}
+		],
+		"Theo3": [
+			{
+				"Face": "theo/Default",
+				"Voice": "theo/theo3_01_t1",
+				"Text": "...ﺎﺑﺎﺘﻛ ﻦﻴﺒﺘﻜﺗ ﻚﻧﺃ ﺖﻌﻤﺳ"
+			},
+			{
+				"Face": "theo/Proud",
+				"Voice": "theo/theo3_02_t2",
+				"Text": "؟ﻪﻴﻓ ﺎﻧﺃ ﻞﻫ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/theo3_03_m1",
+				"Text": "،ﺍﺬﻜﻫ ﺲﻴﻟ ﺮﻣﻷﺍ ،ﻻ\n.ﺮﺜﻛﺃ ﻱﺯﺎﺠﻣ ﻪﻧﺇ"
+			},
+			{
+				"Face": "theo/Smug",
+				"Voice": "theo/theo3_04_t3",
+				"Text": "؟ﻪﻴﻓ ﺲﻜﻴﻟﺃ ﻞﻫﻭ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Text": "..."
+			},
+			{
+				"Face": "theo/Proud",
+				"Voice": "theo/theo3_05_t4",
+				"Text": ".ﺪﻴﻛﺄﺘﻟﺎﺑ ﻪﻴﻓ ﺎﻬﻧﺇ"
+			},
+			{
+				"Face": "theo/Smug",
+				"Voice": "theo/theo3_06_t5",
+				"Text": "!ﺍﺪﺟ ﻒﻴﻄﻟ ﺍﺬﻫ"
+			},
+			{
+				"Face": "madeline/Angry",
+				"Text": "..."
+			}
+		],
+		"Baddy1": [
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy1_01_m1",
+				"Text": ".ﺎﺒﺣﺮﻣ"
+			},
+			{
+				"Face": "baddy/UncertainB",
+				"Voice": "badeline/baddy1_02_b1",
+				"Text": ".ﺎﺒﺣﺮﻣ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/baddy1_03_m2",
+				"Text": "؟ﻚﻟﺎﺣ ﻒﻴﻛ"
+			},
+			{
+				"Face": "baddy/UncertainA",
+				"Text": "..."
+			},
+			{
+				"Face": "baddy/UncertainB",
+				"Voice": "badeline/baddy1_04_b2",
+				"Text": "ﺍﺬﻫ ﻞﻌﻔﻨﺳ ﻞﻫ\n؟ﻼﻌﻓ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/baddy1_05_m3",
+				"Text": ".ﻢﻌﻧ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy1_06_m4",
+				"Text": ".ﻞﻌﻔﻨﺳ ﺎﻨﻧﺃ ﻦﻇﺃ"
+			},
+			{
+				"Face": "baddy/UncertainA",
+				"Voice": "badeline/baddy1_07_b3",
+				"Text": ".ﺔﺒﻌﺻ ﺀﺎﻴﺷﺃ ﻞﻌﻓ ﻰﻠﻋ ﺎﻨﻳﺮﺒﺠﺗ ﺎﻤﺋﺍﺩ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/baddy1_08_m5",
+				"Text": ".ﻚﻟﺫ ﻦﻇﺃ ،ﻢﻌﻧ"
+			},
+			{
+				"Face": "baddy/Angry",
+				"Voice": "badeline/baddy1_09_b4",
+				"Text": "؟ﺐﺴﺤﻓ ﺓﺪﻴﻌﺳ ﻦﻴﻧﻮﻜﺗ ﻻ ﺍﺫﺎﻤﻟ"
+			},
+			{
+				"Face": "baddy/UncertainA",
+				"Voice": "badeline/baddy1_10_b5",
+				"Text": "ﺪﻬﺠﻟﺍ ﺍﺬﻫ ﻞﻛ ﺍﺫﺎﻤﻟ\n.ﺮﻴﻴﻐﺘﻟﺍ ...ﻭ ﻢﻟﻷﺍﻭ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Text": "..."
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/baddy1_11_m6",
+				"Text": "ﻱﺪﻟ ﻥﺎﻛ ﻥﺇ ﻢﻠﻋﺃ ﻻ\n.ﻚﻟ ﺽﺮﻣ ﺏﺍﻮﺟ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/baddy1_12_m7",
+				"Text": "،ﺮﻳﺮﺒﺘﻟﺍ ﺔﻠﺻﺍﻮﻣ ﻊﻴﻄﺘﺳﺃ ﻻ\n.ﺔﻏﺮﻔﻣ ﺔﻘﻠﺣ ﻲﻓ ﺭﻭﺪﻳ ﺮﻣﻷﺎﻓ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy1_13_m8",
+				"Text": ".ﺏﺍﻮﺼﻟﺍ ﻪﻧﺃ ﺮﻌﺷﺃ ،ﻡﻮﻴﻟﺍ ﺔﻳﺎﻬﻧ ﻲﻓ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/baddy1_14_m9",
+				"Text": ".ﻚﻟ ﻪﻟﻮﻗﻷ ﻱﺪﻟ ﺎﻣ ﻞﻛ ﺍﺬﻫ"
+			},
+			{
+				"Face": "baddy/UncertainB",
+				"Voice": "badeline/baddy1_15_b6",
+				"Text": "ﺪﻴﺟ ﺐﺒﺳ ﺍﺬﻫ ﻥﺃ ﻦﻇﺃ\n.ﺮﺧﺁ ﺐﺒﺳ ﻱﺄﻛ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy1_16_m10",
+				"Text": ".ﻲﻌﻣ ﻲﺗﺄﺗ ﻥﺃ ﻙﺪﻳﺭﺃ"
+			},
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/baddy1_17_m11",
+				"Text": ".ﺎﻧﺎﻜﻣ ﻚﻟ ﺢﺴﻓﺄﺳ ،ﻙﻮﺟﺭﺃ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy1_18_m12",
+				"Text": ".ﻲﻓﺎﺨﺗ ﻥﺃ ﻚﻘﺣ ﻦﻣ"
+			},
+			{
+				"Face": "baddy/UncertainB",
+				"Voice": "badeline/baddy1_19_b7",
+				"Text": ".ﺍﺬﻫ ﺝﺎﺘﺤﻧ ﺎﻨﻧﺃ ﻢﻠﻋﺃ"
+			},
+			{
+				"Face": "baddy/UncertainB",
+				"Text": "..."
+			},
+			{
+				"Face": "baddy/UncertainA",
+				"Voice": "badeline/baddy1_20_b8",
+				"Text": ".ﻲﻠﺟﻷ ﺖﻴﺗﺃ ﻚﻧﻷ ﺍﺮﻜﺷ"
+			},
+			{
+				"Face": "baddy/UncertainB",
+				"Text": "..."
+			},
+			{
+				"Face": "baddy/UncertainA",
+				"Voice": "badeline/baddy1_21_b9",
+				"Text": ".ﺎﻨﺑ ﺎﻴﻫ ...ﺎﻬﻠﻌﻔﻨﻟ"
+			}
+		],
+		"Baddy2": [
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/baddy2_01_m1",
+				"Text": ".ﺓﺩﻮﻌﻟﺍ ﻞﻴﻤﺠﻟﺍ ﻦﻣ"
+			},
+			{
+				"Face": "baddy/UncertainB",
+				"Voice": "badeline/baddy2_02_b1",
+				"Text": "ﺔﻫﻮﺸﻤﻟﺍ ﺔﻨﻳﺪﻤﻟﺍ ﻩﺬﻫ ﻰﺘﺣ ،ﻢﻌﻧ\n.ﺖﻴﺒﻟﺎﻛ ﻭﺪﺒﺗ ﺖﻟﺍﺯ ﺎﻣ"
+			},
+			{
+				"Face": "baddy/UncertainA",
+				"Voice": "badeline/baddy2_03_b2",
+				"Text": "ﻮﻔﻄﻟﺍ ﺍﺬﻬﺑ ﺎﻫﺮﻛﺬﺗﺃ ﻻ\n.ﺚﻟﺎﺜﻟﺍ ﺪﻌﺒﻟﺍ ...ﻭ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy2_04_m2",
+				"Text": ".ﺔﻴﻟﺎﺜﻣ ﺖﺴﻴﻟ ﺕﺎﻳﺮﻛﺬﻟﺍ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/baddy2_05_m3",
+				"Text": "ﺐﻌﻟﺃ ﺖﻨﻛ ﺎﻤﺑﺭﻭ\n.ﺍﺮﺧﺆﻣ ﺍﺮﻴﺜﻛ ﺔﻤﻳﺪﻗ ﺎﺑﺎﻌﻟﺃ"
+			},
+			{
+				"Face": "baddy/UncertainA",
+				"Voice": "badeline/baddy2_06_b3",
+				"Text": "؟ﻚﻟﺬﻛ ﺲﻴﻟﺃ ،ﻦﻴﻨﺤﻟﺎﺑ ﻦﻳﺮﻌﺸﺗ"
+			},
+			{
+				"Face": "madeline/Upset",
+				"Voice": "madeline/baddy2_07_m4",
+				"Text": "ﻝﻭﺎﺣﺃ ﻲﻨﻧﺃ ﻦﻇﺃ\n.ﺔﻠﻔﻄﻟﺍ ﻱﺩﺎﻣ ﻰﻟﺇ ﺓﺩﻮﻌﻟﺍ"
+			},
+			{
+				"Face": "baddy/Resolved",
+				"Voice": "badeline/baddy2_08_b4",
+				"Text": "ﻱﺪﻴﻌﺗ ﻥﺃ ﻞﻴﻤﺠﻟﺍ ﻦﻣ\n.ﺮﻴﺒﻛ ﺭﺍﺮﻗ ﻞﺒﻗ ﻚﺗﺍﻮﻄﺧ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy2_09_m5",
+				"Text": ".ﺮﺒﻛﻷﺍ ﺓﺭﻮﺼﻟﺍ ﺔﻳﺅﺭ ﻰﻠﻋ ﻲﻧﺪﻋﺎﺴﻳ ﺍﺬﻫ ،ﻢﻌﻧ"
+			}
+		],
+		"Baddy3": [
+			{
+				"Face": "baddy/UncertainA",
+				"Voice": "badeline/baddy3_01_b1",
+				"Text": "...ﻦﻜﻟ ،ﺎﻔﻴﺨﻣ ﺮﻣﻷﺍ ﻝﺍﺯ ﺎﻣ"
+			},
+			{
+				"Face": "baddy/UncertainB",
+				"Voice": "badeline/baddy3_02_b2",
+				"Text": "ﺕﺃﺪﺑ ﻲﻨﻧﺃ ﻦﻇﺃ\n.ﺱﺎﻤﺤﻟﺎﺑ ﺮﻌﺷﺃ"
+			},
+			{
+				"Face": "madeline/Happy",
+				"Voice": "madeline/baddy3_03_m1",
+				"Text": "!ﻼﻌﻓ ﺮﻴﺜﻣ ﻪﻧﺇ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy3_04_m2",
+				"Text": ".ﺍﺬﻫ ﺎﻧﺩﺭﺃ ﺎﻤﻟﺎﻄﻟ"
+			},
+			{
+				"Face": "madeline/Default",
+				"Voice": "madeline/baddy3_05_m3",
+				"Text": "ﻪﻨﻋ ﺮﻴﺒﻌﺘﻟﺍ ﻊﻄﺘﺴﻧ ﻢﻟ\n.ﻥﻵﺍ ﻰﺘﺣ"
+			},
+			{
+				"Face": "baddy/UncertainA",
+				"Voice": "badeline/baddy3_06_b3",
+				"Text": ".ﻖﺣ ﻚﻌﻣ ،ﻢﻌﻧ"
+			},
+			{
+				"Face": "baddy/Resolved",
+				"Voice": "badeline/baddy3_07_b4",
+				"Text": ".ﺮﻴﺨﺑ ﺀﻲﺷ ﻞﻛ ﻥﻮﻜﻴﺳ ﺎﻤﺑﺭ ...ﺎﻤﺑﺭ"
+			}
+		],
+		"Sign1": [
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_01",
+				"Text": "ﺔﻳﺮﺳ ﺔﺘﻓﻻ\nﺎﻫﺃﺮﻘﺗ ﻻ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/ellipses_01",
+				"Text": "..."
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_03",
+				"Text": "،ﻲﻨﺗﺪﺟﻭ ﻚﻧﺃ ﺎﻤﺑ ﻦﻜﻟ\n:ﺔﺤﻴﺼﻧ ﻚﻴﻟﺇ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_02",
+				"Text": ".ﺍﺮﻴﻣﺎﻜﻟﺎﺑ ﻢﻜﺤﺘﺗ ﻰﻨﻤﻴﻟﺍ ﻢﻜﺤﺘﻟﺍ ﺎﺼﻋ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/ellipses_01",
+				"Text": "..."
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_05",
+				"Text": ".ﺓﺪﻴﺟ ﺔﺤﻴﺼﻧ ﺎﻬﻧﺇ ﻞﻗﺃ ﻢﻟ ،ﻊﻤﺳﺍ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_07",
+				"Text": "ﺪﻴﻌﺒﺘﻟﺍﻭ ﺐﻳﺮﻘﺘﻟﺍ ﺏﺮﺟ ﻦﻜﻟ\n.ﻞﻔﺳﺃﻭ ﻰﻠﻋﻷ ﻰﻨﻤﻴﻟﺍ ﺎﺼﻌﻟﺍ ﻚﻳﺮﺤﺘﺑ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_06",
+				"Text": "ﺔﺒﻌﺼﻟﺍ ﺓﺰﻔﻘﻟﺍ ﺡﺎﺘﻔﻣ ﺎﻧﺎﻴﺣﺃ\n.ﺢﻴﺤﺼﻟﺍ ﺭﻮﻈﻨﻤﻟﺍ ﺩﺎﺠﻳﺇ ﻮﻫ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/snark_02",
+				"Text": "!ﺪﻌﺘﺑﺍ ﻥﻵﺍﻭ"
+			}
+		],
+		"Sign2": [
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_01",
+				"Text": "ﺔﻳﺮﺳ ﺔﺘﻓﻻ\nﺎﻫﺃﺮﻘﺗ ﻻ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/ellipses_01",
+				"Text": "..."
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_03",
+				"Text": "،ﻲﻨﺗﺪﺟﻭ ﻚﻧﺃ ﺎﻤﺑ ﻦﻜﻟ\n:ﺔﺤﻴﺼﻧ ﻚﻴﻟﺇ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_05",
+				"Text": "،ﺔﻋﺮﺳ ﻰﺼﻗﺄﺑ ﺾﻛﺭﺍ ،ﻖﻟﺰﻨﻤﻟﺍ ﺰﻔﻘﻠﻟ\nﺔﻋﺮﺴﺑ ﺭﺪﺘﺳﺍ ﻢﺛ\n!ﺰﻔﻘﻟﺍ ﺭﺯ ﻂﻐﺿﺍﻭ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_04",
+				"Text": "ﻚﻌﻓﺮﻳ ﻖﻟﺰﻨﻤﻟﺍ ﺰﻔﻘﻟﺍ\n.ﻱﺩﺎﻌﻟﺍ ﺰﻔﻘﻟﺍ ﻦﻣ ﻰﻠﻋﺃ\n!ﻪﺑﺮﺟ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_11",
+				"Text": "ﻯﺮﺧﺃ ﺕﺎﺘﻓﻻ ﺕﺪﺟﻭ ﻥﺇﻭ\n.ﺎﻫﺃﺮﻘﺗ ﻼﻓ"
+			}
+		],
+		"Sign3": [
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_01",
+				"Text": "ﺔﻳﺮﺳ ﺔﺘﻓﻻ\nﺎﻫﺃﺮﻘﺗ ﻻ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/ellipses_01",
+				"Text": "..."
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_03",
+				"Text": "،ﻲﻨﺗﺪﺟﻭ ﻚﻧﺃ ﺎﻤﺑ ﻦﻜﻟ\n:ﺔﺤﻴﺼﻧ ﻚﻴﻟﺇ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_05",
+				"Text": "،ﻉﺎﻓﺪﻧﻻﺍ ﻊﻴﻄﺘﺴﺗ ﻚﻧﺃ ﻑﺮﻌﺗ ﺖﻧﺃ\n...ﺰﻔﻘﻟﺍ ﻊﻴﻄﺘﺴﺗ ﻚﻧﺃ ﻑﺮﻌﺗﻭ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_06",
+				"Text": "؟ﻉﺎﻓﺪﻧﻻﺍ ﺓﺰﻔﻗ ﻙﺎﻨﻫ ﻥﺃ ﻢﻠﻌﺗ ﻞﻫ ﻦﻜﻟ\n.ﻱﺮﻘﺒﻋ ﺎﻳ ﺰﻔﻗﺍ ﻢﺛ ﻊﻓﺪﻧﺍ ﻂﻘﻓ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_07",
+				"Text": ".ﺔﻀﻔﺨﻨﻣﻭ ﺔﻠﻳﻮﻃ ﺓﺰﻔﻗ ﻉﺎﻓﺪﻧﻻﺍ ﺓﺰﻔﻗ\n!ﺎﻬﺑﺮﺟ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/snark_01",
+				"Text": ".ﻞﻌﻔﺗ ﻻ ﻭﺃ\n.ﺎﻴﻃﺮﺷ ﺖﺴﻟﻭ ،ﺔﺘﻓﻻ ﺎﻧﺃ"
+			}
+		],
+		"Sign4": [
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_03",
+				"Text": "ﺓﺪﻴﺣﻭ ﺔﺘﻓﻻ\nﻲﻧﺃﺮﻗﺍ ﻚﻠﻀﻓ ﻦﻣ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/ellipses_01",
+				"Text": "..."
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_08",
+				"Text": ".ﻲﻨﺘﻈﺣﻻ ﻚﻧﻷ ﺍﺮﻜﺷ\n:ﺔﺤﻴﺼﻧ ﻚﻴﻟﺇ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_05",
+				"Text": "ﺏﺮﻗ ،ﻰﻠﻋﻷ ﺮﻈﻨﻟﺍ ﺕﺩﺭﺃ ﻥﺇ\n.ﺪﺣ ﻰﺼﻗﺃ ﻰﻟﺇ ﺍﺮﻴﻣﺎﻜﻟﺍ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_10",
+				"Text": ".ﻙﺎﻨﻫ ﻯﺮﺘﺳ ﺍﺫﺎﻣ ﻱﺭﺪﻳ ﻦﻣ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_11",
+				"Text": "،ﺪﻴﻛﺄﺘﻟﺎﺑ ﻑﺮﻋﺃ ﻻ ﺎﻧﺃ\n.ﺔﻌﺿﺍﻮﺘﻣ ﺔﺘﻓﻻ ﺩﺮﺠﻣ ﺎﻧﺄﻓ"
+			}
+		],
+		"CreditsSign": [
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_01",
+				"Text": "ﻞﺒﺠﻟﺍ ﺎﻳﺎﻈﺷ :64 ﺖﺴﻴﻠﻴﺳ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_02",
+				"Text": "ﺖﺴﻴﻠﻴﺳ ﻖﻳﺮﻓ ﺪﻳ ﻰﻠﻋ ﺎﺒﻳﺮﻘﺗ ﻉﻮﺒﺳﺃ ﻲﻓ ﺖﻌﻨﺻ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_03",
+				"Text": ",Maddy Thorson, Noel Berry, Amora B., Pedro Medeiros\nLena Raine, Heidy Motta, Kevin Regamey\nJeff Tangsoc, Power Up Audio"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_04",
+				"Text": "ﺹﺎﺧ ﺮﻜﺷ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_05",
+				"Text": "ﺩﺯﻭ ﺓﺭﺎﺳ ﺮﻜﺸﺗ ﻥﺃ ﻱﺩﺎﻣ ﺩﻮﺗ\n.ﺎﻤﻬﻤﻋﺩﻭ ﺎﻤﻬﺒﺣ ﻰﻠﻋ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_06",
+				"Text": "ﻥﻮﻔﻳﺇ ﻞﻳﻮﻧ ﺮﻜﺸﻳﻭ\n.ﺔﻔﻴﻄﻟﻭ ﺔﺋﺩﺎﻫ ﺎﻬﻧﻷ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_07",
+				"Text": "ﺮﻜﺸﺗ ﻥﺃ ﺍﺭﻮﻣﺃ ﺩﻮﺗﻭ\n،ﻞﻴﻓﻭ ﺯﻭﺭﻭ ﻙﺍﺯﻭ ﻲﻜﻴﻛ\n.ﻢﻬﺣﺮﻣﻭ ﻢﻬﺒﺣ ﻰﻠﻋ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_08",
+				"Text": "،ﺩﻮﻜﻟﺍ ﺞﻣﺩ ﺫﺎﻘﻧﻹ ﺍﺰﻳﺇ ﻭﺭﺪﻴﺑ ﺮﻜﺸﻳﻭ\nﻼﻴﻨﻴﺷ ﻊﻴﻤﺟﻭ ﻮﻨﻴﺳﺎﻣﺍﺩ ﻭﺭﺪﻴﺑﻭ\n!ﺔﺛﻼﺜﻟﺍ ﺩﺎﻌﺑﻷﺍ ﻢﻠﻌﺗ ﻰﻠﻋ ﻪﺗﺪﻋﺎﺴﻤﻟ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_09",
+				"Text": "ﺮﻜﺸﻳ ﻥﺃ ﻒﻴﺟ ﺩﻮﻳﻭ\n.ﻙﺎﻤﻠﻴﺘﺳ ﺰﻳﺰﻌﻟﺍ ﻪﻘﻳﺪﺻ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_10",
+				"Text": "،ﺩﻭﺪﺤﻣﻼﻟﺍ ﺎﻬﻤﻋﺩ ﻰﻠﻋ ﻱﻭﺯ ﻦﻔﻴﻛ ﺮﻜﺸﻳﻭ\nﺔﺒﻳﺮﻏ ﻊﻳﺭﺎﺸﻣ ﻲﻓ ﻰﺘﺣ\n.ﺍﺬﻫ ﻞﺜﻣ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_11",
+				"Text": "ﺮﻜﺸﺗ ﻥﺃ ﺎﻨﻴﻟ ﺩﻮﺗﻭ\n.ﺔﻄﻗ ﺎﻬﻧﻮﻜﻟ ﻦﻴﺑﻮﺑ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_12",
+				"Text": "ﺮﻜﺸﺗ ﻥﺃ ﻱﺪﻳﺎﻫ ﺩﻮﺗﻭ\nﺎﻌﺋﺍﺭ ﻪﻧﻮﻜﻟ ﻦﻳﺍﺮﺑ\n!ﺔﻴﻟﺎﺜﻣ ﺎﻬﻧﻮﻜﻟ ﻱﺭﻮﻓﻭ"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "credits/credits_13",
+				"Text": ".ﻥﺎﻜﻣ ﻞﻛ ﻲﻓ ﺖﺴﻴﻠﻴﺳ ﻲﺒﻋﻼﻟ ﺍﺮﻜﺷ ،ﺍﺮﻴﺧﺃﻭ\nﺓﺮﻴﻐﺼﻟﺍ ﺎﻨﺘﺒﻌﻠﻟ ﻢﻜﻔﻐﺷﻭ ﻢﻜﺒﺣ\n.ﺎﻨﻤﻬﻠﻳ ﻝﺍﺯ ﺎﻣ"
+			}
+		]
+	}
+}

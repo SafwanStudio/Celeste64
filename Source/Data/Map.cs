@@ -321,7 +321,17 @@ public class Map
 				(!checkpoints.Contains(world.Entry.CheckPoint) && name == StartCheckpoint);
 
 			if (spawnsPlayer)
+			{
 				HandleActorCreation(world, entity, new Player(), null);
+
+				// second player spawns right next to the first
+				if (world.TwoPlayer)
+				{
+					var second = new Player() { PlayerIndex = 1 };
+					HandleActorCreation(world, entity, second, null);
+					second.Position += new Vec3(14, 0, 0);
+				}
+			}
 
 			if (name != StartCheckpoint)
 				HandleActorCreation(world, entity, new Checkpoint(name), null);

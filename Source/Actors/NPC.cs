@@ -33,7 +33,7 @@ public abstract class NPC : Actor, IHaveModels, IHaveSprites, IHavePushout, ICas
 
 	public override void Update()
 	{
-		if (World.Camera.Frustum.Contains(WorldBounds))
+		if (World.Camera.Frustum.Contains(WorldBounds) || (World.TwoPlayer && World.Camera2.Frustum.Contains(WorldBounds)))
 			Model.Update(Time);
 		showTimer += Time.Delta;
 	}

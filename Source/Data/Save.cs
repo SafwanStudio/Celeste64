@@ -81,6 +81,11 @@ public class Save
 	public InvertCameraOptions InvertCamera { get; set; } = InvertCameraOptions.None;
 
 	/// <summary>
+	/// If the game is played with two players (split screen)
+	/// </summary>
+	public bool TwoPlayers { get; set; } = false;
+
+	/// <summary>
 	/// Current Language ID
 	/// </summary>
 	public string Language { get; set; } = "english";
