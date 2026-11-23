@@ -151,3 +151,6 @@
 [
 
 ]
+@PointClass = Enemy : "Small floating enemy that chases players" []
+@PointClass = BossCharger : "Boss one: winds up and charges" []
+@PointClass = BossShooter : "Boss two: circles and shoots bolts" []

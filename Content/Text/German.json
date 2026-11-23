@@ -2,8 +2,7 @@
 	"ID": "german",
 	"Label": "Deutsch",
 	"Font": "Renogare",
-	"Strings":
-	{
+	"Strings": {
 		"Confirm": "Bestätigen",
 		"Cancel": "Abbrechen",
 		"Back": "Zurück",
@@ -30,10 +29,11 @@
 		"CameraInvertY": "Y",
 		"CameraInvertBoth": "Beide",
 		"Level.0_FORSAKEN_CITY.Name": "Forsaken City",
-		"Level.0_FORSAKEN_CITY.Label": "Erstellt zum 6. Jahrestag\nvom Celeste-Team"
+		"Level.0_FORSAKEN_CITY.Label": "Erstellt zum 6. Jahrestag\nvom Celeste-Team",
+		"Level.1_GREEN_ARENA.Name": "Green Arena",
+		"Level.1_GREEN_ARENA.Label": "Co-op arena\nbosses and enemies"
 	},
-	"Dialog":
-	{
+	"Dialog": {
 		"Granny1": [
 			{
 				"Face": "granny/Laugh",
@@ -179,7 +179,6 @@
 				"Text": "Das ist nicht so, wie ich es in Erinnerung habe."
 			}
 		],
-
 		"Theo1": [
 			{
 				"Face": "theo/Default",
@@ -354,7 +353,6 @@
 				"Text": "..."
 			}
 		],
-
 		"Baddy1": [
 			{
 				"Face": "madeline/Default",
@@ -562,7 +560,6 @@
 				"Text": "Vielleicht... vielleicht wird's schon gut gehen."
 			}
 		],
-
 		"Sign1": [
 			{
 				"Face": "signpost",
@@ -611,21 +608,21 @@
 			}
 		],
 		"Sign2": [
-  		{
-  			"Face": "signpost",
-  			"Voice": "sign/general_01",
-  			"Text": "Geheime Tafel\nNICHT lesen"
-  		},
-  		{
-  			"Face": "signpost",
-  			"Voice": "sign/ellipses_01",
-  			"Text": "..."
-  		},
-  		{
-  			"Face": "signpost",
-  			"Voice": "sign/general_03",
-  			"Text": "Aber da du mich gefunden hast,\nhier ist ein Tipp:"
-  		},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_01",
+				"Text": "Geheime Tafel\nNICHT lesen"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/ellipses_01",
+				"Text": "..."
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_03",
+				"Text": "Aber da du mich gefunden hast,\nhier ist ein Tipp:"
+			},
 			{
 				"Face": "signpost",
 				"Voice": "sign/general_05",
@@ -643,21 +640,21 @@
 			}
 		],
 		"Sign3": [
-  		{
-  			"Face": "signpost",
-  			"Voice": "sign/general_01",
-  			"Text": "Geheime Tafel\nNICHT lesen"
-  		},
-  		{
-  			"Face": "signpost",
-  			"Voice": "sign/ellipses_01",
-  			"Text": "..."
-  		},
-  		{
-  			"Face": "signpost",
-  			"Voice": "sign/general_03",
-  			"Text": "Aber da du mich gefunden hast,\nhier ist ein Tipp:"
-  		},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_01",
+				"Text": "Geheime Tafel\nNICHT lesen"
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/ellipses_01",
+				"Text": "..."
+			},
+			{
+				"Face": "signpost",
+				"Voice": "sign/general_03",
+				"Text": "Aber da du mich gefunden hast,\nhier ist ein Tipp:"
+			},
 			{
 				"Face": "signpost",
 				"Voice": "sign/general_05",
@@ -711,7 +708,6 @@
 				"Text": "Ich weiß es nicht,\nich bin ja auch nur eine bescheidene Tafel."
 			}
 		],
-
 		"CreditsSign": [
 			{
 				"Face": "signpost",

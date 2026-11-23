@@ -30,7 +30,9 @@
 		"CameraInvertY": "Y축",
 		"CameraInvertBoth": "X + Y축",
 		"Level.0_FORSAKEN_CITY.Name": "버림받은 도시",
-		"Level.0_FORSAKEN_CITY.Label": "셀레스트 6주년을 기념해\n\n제작진이 준비한 작은 선물"
+		"Level.0_FORSAKEN_CITY.Label": "셀레스트 6주년을 기념해\n\n제작진이 준비한 작은 선물",
+		"Level.1_GREEN_ARENA.Name": "Green Arena",
+		"Level.1_GREEN_ARENA.Label": "Co-op arena\nbosses and enemies"
 	},
 	"Dialog": {
 		"Granny1": [

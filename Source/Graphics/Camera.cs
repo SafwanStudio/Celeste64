@@ -125,7 +125,10 @@ public struct Camera()
 			{
 				var width = target.WidthInPixels;
 				var height = target.HeightInPixels;
-				projection = Matrix.CreatePerspectiveFieldOfView(MathF.PI / 4.0f * fovMultiplier, width / (float)height, nearPlane, farPlane);
+				var fov = MathF.PI / 4.0f * fovMultiplier;
+				if (!float.IsFinite(fov) || fov <= 0)
+					fov = MathF.PI / 4.0f;
+				projection = Matrix.CreatePerspectiveFieldOfView(fov, width / (float)height, nearPlane, farPlane);
 			}
 			return projection.Value;
 		}

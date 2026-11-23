@@ -6,5 +6,13 @@
 		"Strawberries": 30,
 		"Preview": "Postcards/ForsakenCity",
 		"Map": "1"
+	},
+	{
+		"ID": "1_GREEN_ARENA",
+		"Name": "Green Arena",
+		"Label": "Co-op arena\nbosses and enemies",
+		"Strawberries": 0,
+		"Preview": "Postcards/ForsakenCity",
+		"Map": "green_arena"
 	}
 ]

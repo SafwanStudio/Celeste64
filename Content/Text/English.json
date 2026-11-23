@@ -2,8 +2,7 @@
 	"ID": "english",
 	"Label": "English",
 	"Font": "Renogare",
-	"Strings":
-	{
+	"Strings": {
 		"Confirm": "Confirm",
 		"Cancel": "Cancel",
 		"Back": "Back",
@@ -31,10 +30,11 @@
 		"CameraInvertY": "Y",
 		"CameraInvertBoth": "Both",
 		"Level.0_FORSAKEN_CITY.Name": "Forsaken City",
-		"Level.0_FORSAKEN_CITY.Label": "Created for the 6th anniversary\nby the Celeste Team"
+		"Level.0_FORSAKEN_CITY.Label": "Created for the 6th anniversary\nby the Celeste Team",
+		"Level.1_GREEN_ARENA.Name": "Green Arena",
+		"Level.1_GREEN_ARENA.Label": "Co-op arena\nbosses and enemies"
 	},
-	"Dialog":
-	{
+	"Dialog": {
 		"Granny1": [
 			{
 				"Face": "granny/Laugh",
@@ -180,7 +180,6 @@
 				"Text": "That's not how I remember it."
 			}
 		],
-
 		"Theo1": [
 			{
 				"Face": "theo/Default",
@@ -355,7 +354,6 @@
 				"Text": "..."
 			}
 		],
-
 		"Baddy1": [
 			{
 				"Face": "madeline/Default",
@@ -563,7 +561,6 @@
 				"Text": "Maybe... maybe it'll be okay."
 			}
 		],
-
 		"Sign1": [
 			{
 				"Face": "signpost",
@@ -712,7 +709,6 @@
 				"Text": "I surely don't know, for\nI am but a humble signpost."
 			}
 		],
-
 		"CreditsSign": [
 			{
 				"Face": "signpost",

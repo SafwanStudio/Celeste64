@@ -327,6 +327,28 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void UpdateCore()
 	{
+		// combat timers
+		if (tInvuln > 0)
+			tInvuln -= Time.Delta;
+		if (tPulse > 0)
+			tPulse -= Time.Delta;
+		if (tPulseLock > 0)
+			tPulseLock -= Time.Delta;
+		if (World.HasCombat && !Dead && Health < MaxHealth)
+		{
+			// slowly heal if nothing hurt us for a while
+			tRegen += Time.Delta;
+			if (tRegen > 12)
+			{
+				Health++;
+				tRegen = 0;
+			}
+		}
+
+		// safety net: never let a bad value spread into the camera
+		if (!float.IsFinite(velocity.X + velocity.Y + velocity.Z))
+			velocity = Vec3.Zero;
+
 		// only update camera if not dead
 		if (stateMachine.State != States.Respawn && stateMachine.State != States.Dead && 
 			stateMachine.State != States.StrawbReveal && stateMachine.State != States.Cassette)
@@ -555,6 +577,10 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
             World.Camera.LookAt = lookAt;
 
 			float targetFOV = Calc.ClampedMap(velocity.XY().Length(), MaxSpeed * 1.2f, 120, 1, 1.2f);
+			if (!float.IsFinite(targetFOV))
+				targetFOV = 1;
+			if (!float.IsFinite(World.Camera.FOVMultiplier))
+				World.Camera.FOVMultiplier = 1;
 
 			World.Camera.FOVMultiplier = Calc.Approach(World.Camera.FOVMultiplier, targetFOV, Time.Delta / 4);
 		}
@@ -680,8 +706,8 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 			Vec2 forward, side;
 			
-            var cameraForward = (World.Camera.LookAt - World.Camera.Position).Normalized().XY();
-			if (cameraForward.X == 0 && cameraForward.Y == 0)
+			var cameraForward = (World.Camera.LookAt - World.Camera.Position).XY();
+			if (!float.IsFinite(cameraForward.X) || !float.IsFinite(cameraForward.Y) || cameraForward.LengthSquared() < 0.0001f)
 				forward = targetFacing;
 			else
 				forward = cameraForward.Normalized();
@@ -803,6 +829,117 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	public void CancelGroundSnap() =>
 		tGroundSnapCooldown = 0.1f;
 
+	/// <summary>Returns true if we actually took damage</summary>
+	public bool Hurt(Vec3 from, int amount = 1)
+	{
+		// dashing is an attack: we cannot be hurt while doing it
+		if (Dead || tInvuln > 0 || stateMachine.State == States.Respawn || stateMachine.State == States.Dashing)
+			return false;
+
+		Health -= amount;
+		tInvuln = 1.4f;
+		tRegen = 0;
+		World.HitStun = 0.07f;
+		Audio.Play(Sfx.sfx_land, Position);
+
+		// knock us away from whatever hit us
+		var away = (Position - from).XY();
+		away = away.LengthSquared() > 0.001f ? away.Normalized() : -targetFacing;
+		velocity = new Vec3(away * 70, 55);
+		tNoMove = 0.3f;
+
+		if (stateMachine.State == States.Dashing || stateMachine.State == States.Skidding || stateMachine.State == States.Climbing)
+			stateMachine.State = States.Normal;
+
+		for (int i = 0; i < 10; i++)
+		{
+			float a = World.Rng.Float() * MathF.Tau;
+			World.Request<Dust>().Init(Position + Vec3.UnitZ * 5, new Vec3(MathF.Cos(a) * 40, MathF.Sin(a) * 40, World.Rng.Float(10, 50)), new Color(1.0f, 0.3f, 0.3f, 1.0f), "particle-star", 3.5f, 0.45f, 0);
+		}
+
+		if (Health <= 0)
+			Kill();
+		return true;
+	}
+
+	public void Heal(int amount)
+	{
+		Health = Math.Min(MaxHealth, Health + amount);
+		tRegen = 0;
+	}
+
+	/// <summary>Player one attacks by dashing into enemies: both get knocked back</summary>
+	private void CheckDashHit()
+	{
+		foreach (var actor in World.All<Hostile>())
+		{
+			if (actor is not Hostile enemy || enemy.IsDead)
+				continue;
+
+			var delta = enemy.Position + enemy.CenterOffset - (Position + Vec3.UnitZ * 5);
+			float reach = enemy.HitRadius + 7;
+			if (delta.LengthSquared() > reach * reach)
+				continue;
+
+			var dir = delta.XY();
+			dir = dir.LengthSquared() > 0.001f ? dir.Normalized() : targetFacing;
+
+			if (enemy.Hit(this, new Vec3(dir, 0), 1))
+			{
+				velocity = new Vec3(-dir * 60, 45);
+				tNoMove = 0.25f;
+				stateMachine.State = States.Normal;
+				return;
+			}
+		}
+	}
+
+	/// <summary>Player two attacks with a burst of light when pressing dash next to an enemy, then reloads</summary>
+	private void TryPulse()
+	{
+		if (tPulse > 0 || !World.HasCombat || !Controls.Dash.Pressed)
+			return;
+
+		var center = Position + Vec3.UnitZ * 5;
+		var targets = new List<Hostile>();
+		foreach (var actor in World.All<Hostile>())
+		{
+			if (actor is not Hostile enemy || enemy.IsDead)
+				continue;
+			float reach = PulseRange + enemy.HitRadius;
+			if ((enemy.Position + enemy.CenterOffset - center).LengthSquared() < reach * reach)
+				targets.Add(enemy);
+		}
+
+		if (targets.Count <= 0)
+			return;
+
+		Controls.Dash.ConsumePress();
+		tPulse = PulseReload;
+		tPulseLock = 0.4f;
+		StopGlide();
+
+		Audio.Play(Sfx.sfx_dash_pink, Position);
+		World.HitStun = 0.05f;
+
+		// lots of particles and a flash of light that fades away
+		for (int i = 0; i < 28; i++)
+		{
+			float a = i / 28.0f * MathF.Tau;
+			float speed = World.Rng.Float(40, 95);
+			World.Request<Dust>().Init(center, new Vec3(MathF.Cos(a) * speed, MathF.Sin(a) * speed, World.Rng.Float(-10, 35)), new Color(0.6f, 0.92f, 1.0f, 1.0f), "particle-star", 5, World.Rng.Float(0.4f, 0.8f), 0);
+		}
+		World.Request<Dust>().Init(center, Vec3.Zero, new Color(0.45f, 0.8f, 1.0f, 1.0f) * 0.55f, "circle", 70, 0.55f, 0);
+		World.Request<Dust>().Init(center, Vec3.Zero, new Color(1.0f, 1.0f, 1.0f, 1.0f) * 0.5f, "circle", 40, 0.35f, 0);
+
+		foreach (var enemy in targets)
+		{
+			var dir = (enemy.Position + enemy.CenterOffset - center).XY();
+			dir = dir.LengthSquared() > 0.001f ? dir.Normalized() : targetFacing;
+			enemy.Hit(this, new Vec3(dir, 0), 1);
+		}
+	}
+
 	private void DoubleJump()
 	{
 		airJumps--;
@@ -859,7 +996,7 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 	private void UpdateGlide()
 	{
-		bool want = IsAltCharacter && !onGround && Controls.Dash.Down && velocity.Z <= 0;
+		bool want = IsAltCharacter && !onGround && Controls.Dash.Down && velocity.Z <= 0 && tPulseLock <= 0;
 		if (!want)
 		{
 			StopGlide();
@@ -1149,6 +1286,17 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	private Texture? normalTexture;
 	private Vec3 lastSafePos;
 	private float tDeadWait;
+
+	// ---- combat: hearts, dash attack (player one) and pulse attack (player two) ----
+	public const int MaxHealth = 5;
+	public int Health = MaxHealth;
+	private float tInvuln;
+	private float tRegen;
+	private float tPulse;
+	private float tPulseLock;
+	private const float PulseReload = 2.0f;
+	private const float PulseRange = 40;
+	public float PulseReadyFraction => IsAltCharacter ? 1.0f - Math.Clamp(tPulse / PulseReload, 0.0f, 1.0f) : 1.0f;
 	private float tFootstep;
 
 	private void StNormalEnter()
@@ -1463,7 +1611,10 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	{
 		// player two cannot dash (the dash button glides in the air instead)
 		if (IsAltCharacter)
+		{
+			TryPulse();
 			return false;
+		}
 
 		if (dashes > 0 && tDashCooldown <= 0 && Controls.Dash.ConsumePress())
 		{
@@ -1509,6 +1660,9 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	private void StDashingUpdate()
 	{
 		Model.Play("Dash");
+
+		if (World.HasCombat)
+			CheckDashHit();
 
 		tDash -= Time.Delta;
 		if (tDash <= 0)
@@ -2224,6 +2378,9 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	private void RespawnNearPartner(Player partner)
 	{
 		Dead = false;
+		Health = MaxHealth;
+		tInvuln = 1.5f;
+		tRegen = 0;
 		Position = partner.lastSafePos + new Vec3(PlayerIndex == 1 ? 12 : -12, 0, 0);
 		velocity = Vec3.Zero;
 		dashes = 1;
@@ -2232,9 +2389,9 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 
 		// snap our camera to the new position
 		cameraOriginPos = Position;
-		GetCameraTarget(out var orig, out var target, out _);
-		World.Camera.LookAt = target;
-		World.Camera.Position = orig;
+		GetCameraTarget(out var respawnLookAt, out var respawnCameraPos, out _);
+		World.Camera.LookAt = respawnLookAt;
+		World.Camera.Position = respawnCameraPos;
 
 		stateMachine.State = States.Respawn;
 	}
@@ -2487,10 +2644,12 @@ public class Player : Actor, IHaveModels, IHaveSprites, IRidePlatforms, ICastPoi
 	{
 		if ((World.Camera.Position - (Position + Vec3.UnitZ * 8)).LengthSquared() > World.Camera.NearPlane * World.Camera.NearPlane)
 		{
-			if (drawHair && !(PlayerIndex == 1 && World.TwoPlayer))
+			bool blinkOff = tInvuln > 0 && ((int)(tInvuln * 12) % 2 == 0);
+
+			if (drawHair && !blinkOff && !(PlayerIndex == 1 && World.TwoPlayer))
 				populate.Add((this, Hair));
 
-			if (drawModel)
+			if (drawModel && !blinkOff)
 				populate.Add((this, Model));
 		}
 

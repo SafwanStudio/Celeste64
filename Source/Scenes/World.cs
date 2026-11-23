@@ -12,6 +12,9 @@ public class World : Scene
 	
 	/// <summary>Two player (split screen) mode</summary>
 	public readonly bool TwoPlayer;
+
+	/// <summary>True if the level contains enemies (shows hearts and boss bars)</summary>
+	public bool HasCombat;
 	public Camera Camera2 = new();
 	public Player? TalkingPlayer;
 	private Target[]? splitTargets;

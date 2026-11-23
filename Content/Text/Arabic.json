@@ -30,7 +30,9 @@
 		"CameraInvertBoth": "ﻥﺎﻨﺛﻻﺍ",
 		"Level.0_FORSAKEN_CITY.Name": "ﺓﺭﻮﺠﻬﻤﻟﺍ ﺔﻨﻳﺪﻤﻟﺍ",
 		"Level.0_FORSAKEN_CITY.Label": "ﺔﺳﺩﺎﺴﻟﺍ ﻯﺮﻛﺬﻠﻟ ﺖﻌﻨﺻ\nﺖﺴﻴﻠﻴﺳ ﻖﻳﺮﻓ ﻦﻣ",
-		"OptionsTwoPlayers": "ﻦﻴﺒﻋﻻ ﻊﺿﻭ"
+		"OptionsTwoPlayers": "ﻦﻴﺒﻋﻻ ﻊﺿﻭ",
+		"Level.1_GREEN_ARENA.Name": "ﺀﺍﺮﻀﺨﻟﺍ ﺔﺣﺎﺴﻟﺍ",
+		"Level.1_GREEN_ARENA.Label": "ﺔﻴﻧﻭﺎﻌﺗ ﺔﺣﺎﺳ\nﺀﺍﺪﻋﺃﻭ ﺀﺎﻤﻋﺯ"
 	},
 	"Dialog": {
 		"Granny1": [
